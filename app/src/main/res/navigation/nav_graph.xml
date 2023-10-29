@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainMenu">
+
+    <fragment
+        android:id="@+id/mainMenu"
+        android:name="com.example.tolkienmaps.MainMenu"
+        android:label="menu_main"
+        tools:layout="@layout/fragment_main_menu" >
+        <action
+            android:id="@+id/action_mainMenu_to_hobbitMenu"
+            app:destination="@id/hobbitMenu" />
+        <action
+            android:id="@+id/action_mainMenu_to_lotrMenu"
+            app:destination="@id/lotrMenu" />
+        <action
+            android:id="@+id/action_mainMenu_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hobbitMenu"
+        android:name="com.example.tolkienmaps.HobbitMenu"
+        android:label="fragment_hobbit_menu"
+        tools:layout="@layout/fragment_hobbit_menu" />
+    <fragment
+        android:id="@+id/lotrMenu"
+        android:name="com.example.tolkienmaps.LotrMenu"
+        android:label="fragment_lotr_menu"
+        tools:layout="@layout/fragment_lotr_menu" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.tolkienmaps.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
+</navigation>

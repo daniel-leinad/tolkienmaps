@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Tolkien Maps</string>
+    <string name="main_map">Main map</string>
+    <string name="hobbit">Hobbit</string>
+    <string name="lord_of_the_rings">Lord of the rings</string>
+    <string name="about">About</string>
+    <string name="wilderland">Wilderland</string>
+    <string name="thror_map">Thror\'s map</string>
+    <string name="middle_earth">Middle Earth</string>
+    <string name="shire">Part of the Shire</string>
+    <string name="rohan_gondor_mordor">Rohan, Gondor and Mordor</string>
+    <string name="about_info">created by Daniel Vedeneev\nfundan.fundan@gmail.com\n2023</string>
+</resources>
