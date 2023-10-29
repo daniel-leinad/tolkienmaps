@@ -15,6 +15,7 @@ class AboutFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        // TODO pick a style and use one
         return inflater.inflate(R.layout.fragment_about, container, false)
     }
 }

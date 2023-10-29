@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.tolkienmaps.databinding.FragmentLotrMenuBinding
 
 class LotrMenu : Fragment() {
@@ -16,6 +17,7 @@ class LotrMenu : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // TODO pick a style and use one
         binding = FragmentLotrMenuBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -25,15 +27,16 @@ class LotrMenu : Fragment() {
 
 
         binding.middleEarthButton.setOnClickListener {
-            showMessage("Middle earth")
+            findNavController().navigate(R.id.action_lotrMenu_to_middleEarthMap)
         }
 
         binding.shireButton.setOnClickListener {
+            // TODO
             showMessage("Shire")
         }
 
         binding.rohanGondorMordorButton.setOnClickListener {
-            showMessage("Rohan, gondor, mordor")
+            findNavController().navigate(R.id.action_lotrMenu_to_rohanGondorMordorMap)
         }
 
     }
