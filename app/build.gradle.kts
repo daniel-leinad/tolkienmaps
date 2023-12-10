@@ -72,6 +72,4 @@ dependencies {
 
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
-
-    implementation ("com.davemorrissey.labs:subsampling-scale-image-view:3.10.0")
 }
