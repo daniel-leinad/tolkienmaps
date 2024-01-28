@@ -3,8 +3,8 @@ package com.example.tolkienmaps
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.graphics.Matrix
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -16,6 +16,9 @@ import kotlin.math.min
 class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     lateinit var imageSource1: Bitmap
     lateinit var imageSource2: Bitmap
+    lateinit var imageSource1Preview: Bitmap
+    lateinit var imageSource2Preview: Bitmap
+    val image2Matrix = Matrix()
     private val imageSourcePaint = Paint()
     private var imageSourceMatrix = Matrix()
     private var cachedPoints: MutableList<XYPoint> = mutableListOf()
@@ -28,7 +31,7 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
             val scaleFactor = scaleGestureDetector.scaleFactor
             val x = scaleGestureDetector.focusX
             val y = scaleGestureDetector.focusY
-            imageSourceMatrix.postTranslate(-x, -y)
+            imageSourceMatrix.postTranslate(-x , -y)
             imageSourceMatrix.postScale(scaleFactor, scaleFactor)
             imageSourceMatrix.postTranslate(x, y)
             needInvalidation = true
@@ -79,8 +82,26 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawBitmap(imageSource1, imageSourceMatrix, imageSourcePaint)
-        canvas.drawBitmap(imageSource2, imageSourceMatrix, imageSourcePaint)
+        val matrix2 = Matrix()
+        matrix2.postConcat(image2Matrix)
+        matrix2.postConcat(imageSourceMatrix)
+        drawBitmap(canvas, imageSourceMatrix, imageSource1, imageSource1Preview)
+        drawBitmap(canvas, matrix2, imageSource2, imageSource2Preview)
+    }
+
+    private fun drawBitmap(canvas: Canvas, matrix: Matrix, image: Bitmap, preview: Bitmap) {
+        val f = FloatArray(9)
+        matrix.getValues(f)
+        val scaleX = f[Matrix.MSCALE_X]
+        val previewScale = image.width.toFloat() / preview.width.toFloat()
+        if (scaleX < 1) {
+            val resMatrix = Matrix()
+            resMatrix.postScale(previewScale, previewScale)
+            resMatrix.postConcat(matrix)
+            canvas.drawBitmap(preview, resMatrix, imageSourcePaint)
+        } else {
+            canvas.drawBitmap(image, matrix, imageSourcePaint)
+        }
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
