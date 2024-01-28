@@ -1,4 +1,4 @@
-package com.example.tolkienmaps.ui.theme
+package my.danielleinad.tolkienmaps.ui.theme
 
 import android.app.Activity
 import android.os.Build

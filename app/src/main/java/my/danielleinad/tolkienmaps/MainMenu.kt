@@ -1,4 +1,4 @@
-package com.example.tolkienmaps
+package my.danielleinad.tolkienmaps
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import com.example.tolkienmaps.databinding.FragmentMainMenuBinding
+import my.danielleinad.tolkienmaps.databinding.FragmentMainMenuBinding
 
 
 class MainMenu : Fragment() {

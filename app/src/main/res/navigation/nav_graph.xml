@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainMenu"
-        android:name="com.example.tolkienmaps.MainMenu"
+        android:name="my.danielleinad.tolkienmaps.MainMenu"
         android:label="menu_main"
         tools:layout="@layout/fragment_main_menu" >
         <action
@@ -25,12 +25,12 @@
     </fragment>
     <fragment
         android:id="@+id/hobbitMenu"
-        android:name="com.example.tolkienmaps.HobbitMenu"
+        android:name="my.danielleinad.tolkienmaps.HobbitMenu"
         android:label="fragment_hobbit_menu"
         tools:layout="@layout/fragment_hobbit_menu" />
     <fragment
         android:id="@+id/lotrMenu"
-        android:name="com.example.tolkienmaps.LotrMenu"
+        android:name="my.danielleinad.tolkienmaps.LotrMenu"
         android:label="fragment_lotr_menu"
         tools:layout="@layout/fragment_lotr_menu" >
         <action
@@ -42,17 +42,17 @@
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.example.tolkienmaps.AboutFragment"
+        android:name="my.danielleinad.tolkienmaps.AboutFragment"
         android:label="fragment_about"
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/rohanGondorMordorMap"
-        android:name="com.example.tolkienmaps.RohanGondorMordorMap"
+        android:name="my.danielleinad.tolkienmaps.RohanGondorMordorMap"
         android:label="fragment_rohan_gondor_mordor_map"
         tools:layout="@layout/fragment_rohan_gondor_mordor_map" />
     <fragment
         android:id="@+id/middleEarthMap"
-        android:name="com.example.tolkienmaps.MiddleEarthMap"
+        android:name="my.danielleinad.tolkienmaps.MiddleEarthMap"
         android:label="fragment_middle_earth_map"
         tools:layout="@layout/fragment_middle_earth_map" />
 </navigation>

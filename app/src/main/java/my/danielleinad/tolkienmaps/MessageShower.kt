@@ -1,4 +1,4 @@
-package com.example.tolkienmaps
+package my.danielleinad.tolkienmaps
 
 import android.util.Log
 

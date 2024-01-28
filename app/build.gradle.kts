@@ -4,15 +4,16 @@ plugins {
 }
 
 android {
-    namespace = "com.example.tolkienmaps"
+    namespace = "my.danielleinad.tolkienmaps"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.tolkienmaps"
+        // TODO there should be a better way to debug app separately
+        applicationId = "my.danielleinad.tolkienmaps.debug"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

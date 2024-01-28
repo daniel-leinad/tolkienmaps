@@ -1,4 +1,4 @@
-package com.example.tolkienmaps
+package my.danielleinad.tolkienmaps
 
 import org.junit.Test
 

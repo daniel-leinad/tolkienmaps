@@ -1,4 +1,4 @@
-package com.example.tolkienmaps.ui.theme
+package my.danielleinad.tolkienmaps.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.example.tolkienmaps
+package my.danielleinad.tolkienmaps
 
 import android.content.Context
 import android.graphics.Bitmap

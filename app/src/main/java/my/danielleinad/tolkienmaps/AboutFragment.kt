@@ -1,4 +1,4 @@
-package com.example.tolkienmaps
+package my.danielleinad.tolkienmaps
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

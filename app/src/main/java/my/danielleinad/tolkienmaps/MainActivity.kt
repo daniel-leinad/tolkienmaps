@@ -1,8 +1,8 @@
-package com.example.tolkienmaps
+package my.danielleinad.tolkienmaps
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import com.example.tolkienmaps.databinding.ActivityMainBinding
+import my.danielleinad.tolkienmaps.databinding.ActivityMainBinding
 
 class MainActivity : FragmentActivity() {
     private lateinit var binding: ActivityMainBinding
