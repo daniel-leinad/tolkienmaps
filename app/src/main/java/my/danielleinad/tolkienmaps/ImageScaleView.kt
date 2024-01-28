@@ -14,16 +14,19 @@ import kotlin.math.min
 
 
 class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attrs) {
-    lateinit var imageSource1: Bitmap
-    lateinit var imageSource2: Bitmap
-    lateinit var imageSource1Preview: Bitmap
-    lateinit var imageSource2Preview: Bitmap
     val image2Matrix = Matrix()
     private val imageSourcePaint = Paint()
     private var imageSourceMatrix = Matrix()
     private var cachedPoints: MutableList<XYPoint> = mutableListOf()
     inner class XYPoint(val x: Float, val y: Float)
     private var needInvalidation = false
+    private var layers: MutableList<LayerDescription> = mutableListOf()
+
+    class LayerDescription(val bitmap: Bitmap, val previewBitmap: Bitmap, val matrix: Matrix)
+
+    fun addLayer(bitmap: Bitmap, previewBitmap: Bitmap, matrix: Matrix) {
+        layers.add(LayerDescription(bitmap, previewBitmap, matrix))
+    }
 
     private val scaleGestureDetector = ScaleGestureDetector(context, object : OnScaleGestureListener {
         override fun onScale(scaleGestureDetector: ScaleGestureDetector): Boolean {
@@ -82,11 +85,12 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val matrix2 = Matrix()
-        matrix2.postConcat(image2Matrix)
-        matrix2.postConcat(imageSourceMatrix)
-        drawBitmap(canvas, imageSourceMatrix, imageSource1, imageSource1Preview)
-        drawBitmap(canvas, matrix2, imageSource2, imageSource2Preview)
+        for (layer in layers) {
+            val matrix = Matrix()
+            matrix.postConcat(layer.matrix)
+            matrix.postConcat(imageSourceMatrix)
+            drawBitmap(canvas, matrix, layer.bitmap, layer.previewBitmap)
+        }
     }
 
     private fun drawBitmap(canvas: Canvas, matrix: Matrix, image: Bitmap, preview: Bitmap) {
@@ -106,10 +110,12 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
+        if (layers.size == 0) return
         val width = (right - left).toFloat()
         val height = (bottom - top).toFloat()
-        val imageWidth = imageSource1.width.toFloat()
-        val imageHeight = imageSource1.height.toFloat()
+        val imageSource1 = layers[0]
+        val imageWidth = imageSource1.bitmap.width.toFloat()
+        val imageHeight = imageSource1.bitmap.height.toFloat()
         val scaleFactor = min(width / imageWidth, height / imageHeight)
         imageSourceMatrix.postScale(scaleFactor, scaleFactor)
     }

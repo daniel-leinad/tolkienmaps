@@ -3,6 +3,7 @@ package my.danielleinad.tolkienmaps
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -20,14 +21,16 @@ class MiddleEarthMap : Fragment() {
         // Inflate the layout for this fragment
         // TODO pick a style and use one
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
-//        binding.imageView.setImage(ImageSource.resource(R.drawable.map_middle_earth))
-        binding.imageView.imageSource1 = BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth)
-        binding.imageView.imageSource2 = BitmapFactory.decodeResource(resources, R.drawable.transparent_test)
-        binding.imageView.imageSource1Preview = BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth_preview_2)
-        binding.imageView.imageSource2Preview = BitmapFactory.decodeResource(resources, R.drawable.transparent_test_preview)
-//        binding.imageView.image2Matrix.postScale(0.5f, 0.5f)
-//        binding.imageView.imageSource2 = BitmapFactory.decodeResource(resources, R.drawable.transparent_test)
-//        binding.imageView.imageSource1 = createBitmap()
+        binding.imageView.addLayer(
+            BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth),
+            BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth_preview_2),
+            Matrix()
+        )
+        binding.imageView.addLayer(
+            BitmapFactory.decodeResource(resources, R.drawable.transparent_test),
+            BitmapFactory.decodeResource(resources, R.drawable.transparent_test_preview),
+            Matrix()
+        )
         return binding.root
     }
 
