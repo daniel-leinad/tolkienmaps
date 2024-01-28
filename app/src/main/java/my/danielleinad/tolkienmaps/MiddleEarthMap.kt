@@ -23,13 +23,16 @@ class MiddleEarthMap : Fragment() {
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
         binding.imageView.addLayer(
             BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth),
-            BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth_preview_2),
+            BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth_preview_3),
             Matrix()
         )
+        val wilderlandMatrix = Matrix()
+        wilderlandMatrix.postScale(0.269F,0.269F)
+        wilderlandMatrix.postTranslate(1720F, 672F)
         binding.imageView.addLayer(
-            BitmapFactory.decodeResource(resources, R.drawable.transparent_test),
-            BitmapFactory.decodeResource(resources, R.drawable.transparent_test_preview),
-            Matrix()
+            BitmapFactory.decodeResource(resources, R.drawable.map_wilderland),
+            BitmapFactory.decodeResource(resources, R.drawable.map_wilderland_preview),
+            wilderlandMatrix
         )
         return binding.root
     }
