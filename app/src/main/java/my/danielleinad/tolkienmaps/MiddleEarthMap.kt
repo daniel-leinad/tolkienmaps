@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,6 +16,9 @@ import my.danielleinad.tolkienmaps.databinding.FragmentMiddleEarthMapBinding
 class MiddleEarthMap : Fragment() {
     private lateinit var binding: FragmentMiddleEarthMapBinding
     private var areLayersShown: Boolean = false
+    private lateinit var mainBitmap: ImageScaleView.BitMapLayer
+    private lateinit var wilderlandBitmap: ImageScaleView.BitMapLayer
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -22,12 +26,17 @@ class MiddleEarthMap : Fragment() {
         // Inflate the layout for this fragment
         // TODO pick a style and use one
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
+        mainBitmap = binding.imageView.BitMapLayer(
+            BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth),
+            BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth_preview_3))
+        wilderlandBitmap = binding.imageView.BitMapLayer(
+            BitmapFactory.decodeResource(resources, R.drawable.map_wilderland),
+            BitmapFactory.decodeResource(resources, R.drawable.map_wilderland_preview))
 
         fun redrawLayers() {
             binding.imageView.clearLayers()
             binding.imageView.addLayer(
-                BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth),
-                BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth_preview_3),
+                mainBitmap,
                 Matrix()
             )
 
@@ -37,9 +46,17 @@ class MiddleEarthMap : Fragment() {
                 wilderlandMatrix.postScale(0.269F, 0.269F)
                 wilderlandMatrix.postTranslate(1720F, 672F)
                 binding.imageView.addLayer(
-                    BitmapFactory.decodeResource(resources, R.drawable.map_wilderland),
-                    BitmapFactory.decodeResource(resources, R.drawable.map_wilderland_preview),
-                    wilderlandMatrix
+                    wilderlandBitmap,
+                    wilderlandMatrix,
+                )
+
+                val redPaint = Paint()
+                redPaint.color = Color.RED
+                val wilderlandBorders = binding.imageView.RectangleLayer(
+                    0f, 0f, 2000f, 1000f, redPaint)
+                binding.imageView.addLayer(
+                    wilderlandBorders,
+                    Matrix(wilderlandMatrix), // is this copy necessary?
                 )
 
             }

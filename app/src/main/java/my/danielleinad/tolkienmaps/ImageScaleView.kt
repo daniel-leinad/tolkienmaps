@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -21,10 +22,62 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
     private var needInvalidation = false
     private val layers: MutableList<LayerDescription> = mutableListOf()
 
-    class LayerDescription(val bitmap: Bitmap, val previewBitmap: Bitmap, val matrix: Matrix)
+    interface Layer {
+        fun drawItself(canvas: Canvas, matrix: Matrix)
+        val width: Float
+        val height: Float
+    }
 
-    fun addLayer(bitmap: Bitmap, previewBitmap: Bitmap, matrix: Matrix) {
-        layers.add(LayerDescription(bitmap, previewBitmap, matrix))
+//    TODO do these work/make sense as an inner class??
+    inner class BitMapLayer(val bitmap: Bitmap, val previewBitmap: Bitmap) : Layer {
+        override fun drawItself(canvas: Canvas, matrix: Matrix) {
+            val f = FloatArray(9)
+            matrix.getValues(f)
+            val scaleX = f[Matrix.MSCALE_X]
+            val previewScale = bitmap.width.toFloat() / previewBitmap.width.toFloat()
+            if (scaleX < 1) {
+                val resMatrix = Matrix()
+                resMatrix.postScale(previewScale, previewScale)
+                resMatrix.postConcat(matrix)
+                canvas.drawBitmap(previewBitmap, resMatrix, imageSourcePaint)
+            } else {
+                canvas.drawBitmap(bitmap, matrix, imageSourcePaint)
+            }
+        }
+
+        override val width: Float = bitmap.width.toFloat()
+        override val height: Float = bitmap.height.toFloat()
+    }
+
+    inner class RectangleLayer(
+        val left: Float,
+        val top: Float,
+        val right: Float,
+        val bottom: Float,
+        val paint: Paint) : Layer {
+        override fun drawItself(canvas: Canvas, matrix: Matrix) {
+            // TODO better name for resRect!!
+            val resRect = RectF(left, top, right, bottom)
+            matrix.mapRect(resRect)
+            canvas.drawRect(resRect, paint)
+        }
+
+        override val width: Float = right - left
+        override val height: Float = top - bottom
+    }
+
+    inner class LayerDescription(val layer: Layer, val initialMatrix: Matrix) {
+        fun drawItself(canvas: Canvas) {
+            val matrix = Matrix()
+            matrix.postConcat(initialMatrix)
+            matrix.postConcat(imageSourceMatrix)
+            layer.drawItself(canvas, matrix)
+        }
+    }
+
+
+    fun addLayer(layer: Layer, initialMatrix: Matrix) {
+        layers.add(LayerDescription(layer, initialMatrix))
     }
 
     fun clearLayers() {
@@ -89,27 +142,8 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         for (layer in layers) {
-            val matrix = Matrix()
-            matrix.postConcat(layer.matrix)
-            matrix.postConcat(imageSourceMatrix)
-            drawBitmap(canvas, matrix, layer.bitmap, layer.previewBitmap)
+            layer.drawItself(canvas)
         }
-    }
-
-    private fun drawBitmap(canvas: Canvas, matrix: Matrix, image: Bitmap, preview: Bitmap) {
-        val f = FloatArray(9)
-        matrix.getValues(f)
-        val scaleX = f[Matrix.MSCALE_X]
-        val previewScale = image.width.toFloat() / preview.width.toFloat()
-        if (scaleX < 1) {
-            val resMatrix = Matrix()
-            resMatrix.postScale(previewScale, previewScale)
-            resMatrix.postConcat(matrix)
-            canvas.drawBitmap(preview, resMatrix, imageSourcePaint)
-        } else {
-            canvas.drawBitmap(image, matrix, imageSourcePaint)
-        }
-
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -120,8 +154,8 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         val width = (right - left).toFloat()
         val height = (bottom - top).toFloat()
         val imageSource1 = layers[0]
-        val imageWidth = imageSource1.bitmap.width.toFloat()
-        val imageHeight = imageSource1.bitmap.height.toFloat()
+        val imageWidth: Float = imageSource1.layer.width
+        val imageHeight: Float = imageSource1.layer.height
         val scaleFactor = min(width / imageWidth, height / imageHeight)
         imageSourceMatrix.postScale(scaleFactor, scaleFactor)
     }
