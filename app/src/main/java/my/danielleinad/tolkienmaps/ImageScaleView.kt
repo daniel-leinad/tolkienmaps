@@ -14,18 +14,21 @@ import kotlin.math.min
 
 
 class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attrs) {
-    val image2Matrix = Matrix()
     private val imageSourcePaint = Paint()
     private var imageSourceMatrix = Matrix()
     private var cachedPoints: MutableList<XYPoint> = mutableListOf()
     inner class XYPoint(val x: Float, val y: Float)
     private var needInvalidation = false
-    private var layers: MutableList<LayerDescription> = mutableListOf()
+    private val layers: MutableList<LayerDescription> = mutableListOf()
 
     class LayerDescription(val bitmap: Bitmap, val previewBitmap: Bitmap, val matrix: Matrix)
 
     fun addLayer(bitmap: Bitmap, previewBitmap: Bitmap, matrix: Matrix) {
         layers.add(LayerDescription(bitmap, previewBitmap, matrix))
+    }
+
+    fun clearLayers() {
+        layers.clear()
     }
 
     private val scaleGestureDetector = ScaleGestureDetector(context, object : OnScaleGestureListener {
@@ -106,11 +109,14 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         } else {
             canvas.drawBitmap(image, matrix, imageSourcePaint)
         }
+
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
+
         if (layers.size == 0) return
+
         val width = (right - left).toFloat()
         val height = (bottom - top).toFloat()
         val imageSource1 = layers[0]

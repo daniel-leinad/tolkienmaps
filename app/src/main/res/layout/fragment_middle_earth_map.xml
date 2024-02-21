@@ -23,4 +23,11 @@
         android:layout_height="100dp"
         android:layout_gravity="right"
         android:src="@drawable/compass_middle_earth" />
+
+    <Button
+        android:id="@+id/showHideLayers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="show/hide layers" />
 </FrameLayout>

@@ -14,6 +14,7 @@ import my.danielleinad.tolkienmaps.databinding.FragmentMiddleEarthMapBinding
 
 class MiddleEarthMap : Fragment() {
     private lateinit var binding: FragmentMiddleEarthMapBinding
+    private var areLayersShown: Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -21,19 +22,38 @@ class MiddleEarthMap : Fragment() {
         // Inflate the layout for this fragment
         // TODO pick a style and use one
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
-        binding.imageView.addLayer(
-            BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth),
-            BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth_preview_3),
-            Matrix()
-        )
-        val wilderlandMatrix = Matrix()
-        wilderlandMatrix.postScale(0.269F,0.269F)
-        wilderlandMatrix.postTranslate(1720F, 672F)
-        binding.imageView.addLayer(
-            BitmapFactory.decodeResource(resources, R.drawable.map_wilderland),
-            BitmapFactory.decodeResource(resources, R.drawable.map_wilderland_preview),
-            wilderlandMatrix
-        )
+
+        fun redrawLayers() {
+            binding.imageView.clearLayers()
+            binding.imageView.addLayer(
+                BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth),
+                BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth_preview_3),
+                Matrix()
+            )
+
+            if (areLayersShown) {
+
+                val wilderlandMatrix = Matrix()
+                wilderlandMatrix.postScale(0.269F, 0.269F)
+                wilderlandMatrix.postTranslate(1720F, 672F)
+                binding.imageView.addLayer(
+                    BitmapFactory.decodeResource(resources, R.drawable.map_wilderland),
+                    BitmapFactory.decodeResource(resources, R.drawable.map_wilderland_preview),
+                    wilderlandMatrix
+                )
+
+            }
+
+            binding.imageView.invalidate()
+        }
+
+        binding.showHideLayers.setOnClickListener {
+            areLayersShown = !areLayersShown
+            redrawLayers()
+        }
+
+        redrawLayers()
+
         return binding.root
     }
 
