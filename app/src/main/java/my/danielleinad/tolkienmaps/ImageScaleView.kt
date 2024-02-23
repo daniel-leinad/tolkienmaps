@@ -7,6 +7,8 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.GestureDetector
+import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.OnScaleGestureListener
@@ -18,9 +20,55 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
     private val imageSourcePaint = Paint()
     private var imageSourceMatrix = Matrix()
     private var cachedPoints: MutableList<XYPoint> = mutableListOf()
-    inner class XYPoint(val x: Float, val y: Float)
+    class XYPoint(val x: Float, val y: Float)
     private var needInvalidation = false
     val layers: MutableList<LayerDescription> = mutableListOf()
+
+    private val scaleGestureDetector = ScaleGestureDetector(context, object : OnScaleGestureListener {
+        override fun onScale(scaleGestureDetector: ScaleGestureDetector): Boolean {
+            MessageShower.show("on scale!")
+            val scaleFactor = scaleGestureDetector.scaleFactor
+            val x = scaleGestureDetector.focusX
+            val y = scaleGestureDetector.focusY
+            imageSourceMatrix.postTranslate(-x , -y)
+            imageSourceMatrix.postScale(scaleFactor, scaleFactor)
+            imageSourceMatrix.postTranslate(x, y)
+            needInvalidation = true
+            return true
+        }
+
+        override fun onScaleBegin(scaleGestureDetector: ScaleGestureDetector): Boolean {
+            MessageShower.show("scale begins!")
+            return true
+        }
+
+        override fun onScaleEnd(scaleGestureDetector: ScaleGestureDetector) {
+            MessageShower.show("done with scale!")
+        }
+
+    })
+
+    private val gestureDetector: GestureDetector = GestureDetector(context, object : SimpleOnGestureListener() {
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            val currentPoint = XYPoint(e.x, e.y)
+            for (i in layers.size-1 downTo 0) {
+                val layer = layers[i]
+
+                if (!layer.activated) continue
+                if (layer.onClickListener == null) continue
+                if (!layer.contains(currentPoint)) continue
+
+                val res = layer.onClickListener!!()
+                needInvalidation = true
+
+                if (res) break
+            }
+
+            invalidateIfNeeded()
+
+            return true
+        }
+    })
 
     interface Layer {
         fun drawItself(canvas: Canvas, matrix: Matrix)
@@ -99,30 +147,6 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         }
     }
 
-    private val scaleGestureDetector = ScaleGestureDetector(context, object : OnScaleGestureListener {
-        override fun onScale(scaleGestureDetector: ScaleGestureDetector): Boolean {
-            MessageShower.show("on scale!")
-            val scaleFactor = scaleGestureDetector.scaleFactor
-            val x = scaleGestureDetector.focusX
-            val y = scaleGestureDetector.focusY
-            imageSourceMatrix.postTranslate(-x , -y)
-            imageSourceMatrix.postScale(scaleFactor, scaleFactor)
-            imageSourceMatrix.postTranslate(x, y)
-            needInvalidation = true
-            return true
-        }
-
-        override fun onScaleBegin(scaleGestureDetector: ScaleGestureDetector): Boolean {
-            MessageShower.show("scale begins!")
-            return true
-        }
-
-        override fun onScaleEnd(scaleGestureDetector: ScaleGestureDetector) {
-            MessageShower.show("done with scale!")
-        }
-
-    })
-
 //    private val gestureDetector = GestureDetector(context, object : OnGestureListener {
 //        override fun onDown(p0: MotionEvent): Boolean {
 //            MessageShower.show("onDown")
@@ -174,27 +198,27 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         val scaleFactor = min(width / imageWidth, height / imageHeight)
         imageSourceMatrix.postScale(scaleFactor, scaleFactor)
 
-        setOnClickListener {
-            if (cachedPoints.size == 0) {
-                MessageShower.show("Something went wrong during click: no coordinates detected")
-                return@setOnClickListener
-            }
-
-            val currentPoint = cachedPoints[0]
-
-            for (i in layers.size-1 downTo 0) {
-                val layer = layers[i]
-
-                if (!layer.activated) continue
-                if (layer.onClickListener == null) continue
-                if (!layer.contains(currentPoint)) continue
-
-                val res = layer.onClickListener!!()
-                needInvalidation = true
-                if (res) break
-            }
-            invalidateIfNeeded()
-        }
+//        setOnClickListener {
+//            if (cachedPoints.size == 0) {
+//                MessageShower.show("Something went wrong during click: no coordinates detected")
+//                return@setOnClickListener
+//            }
+//
+//            val currentPoint = cachedPoints[0]
+//
+//            for (i in layers.size-1 downTo 0) {
+//                val layer = layers[i]
+//
+//                if (!layer.activated) continue
+//                if (layer.onClickListener == null) continue
+//                if (!layer.contains(currentPoint)) continue
+//
+//                val res = layer.onClickListener!!()
+//                needInvalidation = true
+//                if (res) break
+//            }
+//            invalidateIfNeeded()
+//        }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -238,6 +262,7 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
                 }
             }
             scaleGestureDetector.onTouchEvent(event)
+            gestureDetector.onTouchEvent(event)
 
             invalidateIfNeeded()
         }
