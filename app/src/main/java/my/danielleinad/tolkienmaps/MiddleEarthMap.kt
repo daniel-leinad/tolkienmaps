@@ -54,6 +54,10 @@ class MiddleEarthMap : Fragment() {
             0f, 0f, wilderlandBitmap.width, wilderlandBitmap.height, false, redPaint)
         // is copy of wilderlandMatrix necessary?
         val wilderlandBordersLayer = binding.imageView.LayerDescription(wilderlandBorders, Matrix(wilderlandMatrix))
+        wilderlandBordersLayer.onClickListener = {
+            wilderlandLayer.activated = !wilderlandLayer.activated
+            true
+        }
         binding.imageView.layers.add(wilderlandBordersLayer)
         nonMainLayers.add(wilderlandBordersLayer)
 
