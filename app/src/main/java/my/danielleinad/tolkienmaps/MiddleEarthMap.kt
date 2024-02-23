@@ -18,6 +18,7 @@ class MiddleEarthMap : Fragment() {
     private var areLayersShown: Boolean = false
     private lateinit var mainBitmap: ImageScaleView.BitMapLayer
     private lateinit var wilderlandBitmap: ImageScaleView.BitMapLayer
+    private val nonMainLayers: MutableList<ImageScaleView.LayerDescription> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,32 +34,27 @@ class MiddleEarthMap : Fragment() {
             BitmapFactory.decodeResource(resources, R.drawable.map_wilderland),
             BitmapFactory.decodeResource(resources, R.drawable.map_wilderland_preview))
 
-        fun redrawLayers() {
-            binding.imageView.clearLayers()
-            binding.imageView.addLayer(
-                mainBitmap,
-                Matrix()
-            )
+        binding.imageView.layers.add(binding.imageView.LayerDescription(mainBitmap, Matrix()))
 
-            if (areLayersShown) {
+        val wilderlandMatrix = Matrix()
+        wilderlandMatrix.postScale(0.269F, 0.269F)
+        wilderlandMatrix.postTranslate(1720F, 672F)
+        val wilderlandLayer = binding.imageView.LayerDescription(wilderlandBitmap, wilderlandMatrix)
+        binding.imageView.layers.add(wilderlandLayer)
+        nonMainLayers.add(wilderlandLayer)
 
-                val wilderlandMatrix = Matrix()
-                wilderlandMatrix.postScale(0.269F, 0.269F)
-                wilderlandMatrix.postTranslate(1720F, 672F)
-                binding.imageView.addLayer(
-                    wilderlandBitmap,
-                    wilderlandMatrix,
-                )
+        val redPaint = Paint()
+        redPaint.color = Color.RED
+        val wilderlandBorders = binding.imageView.RectangleLayer(
+            0f, 0f, 2000f, 1000f, redPaint)
+        // is copy of wilderlandMatrix necessary?
+        val wilderlandBordersLayer = binding.imageView.LayerDescription(wilderlandBorders, Matrix(wilderlandMatrix))
+        binding.imageView.layers.add(wilderlandBordersLayer)
+        nonMainLayers.add(wilderlandBordersLayer)
 
-                val redPaint = Paint()
-                redPaint.color = Color.RED
-                val wilderlandBorders = binding.imageView.RectangleLayer(
-                    0f, 0f, 2000f, 1000f, redPaint)
-                binding.imageView.addLayer(
-                    wilderlandBorders,
-                    Matrix(wilderlandMatrix), // is this copy necessary?
-                )
-
+        fun hideShowLayers() {
+            for (layerDescription in nonMainLayers) {
+                layerDescription.activated = areLayersShown
             }
 
             binding.imageView.invalidate()
@@ -66,10 +62,10 @@ class MiddleEarthMap : Fragment() {
 
         binding.showHideLayers.setOnClickListener {
             areLayersShown = !areLayersShown
-            redrawLayers()
+            hideShowLayers()
         }
 
-        redrawLayers()
+        hideShowLayers()
 
         return binding.root
     }

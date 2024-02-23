@@ -20,7 +20,7 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
     private var cachedPoints: MutableList<XYPoint> = mutableListOf()
     inner class XYPoint(val x: Float, val y: Float)
     private var needInvalidation = false
-    private val layers: MutableList<LayerDescription> = mutableListOf()
+    val layers: MutableList<LayerDescription> = mutableListOf()
 
     interface Layer {
         fun drawItself(canvas: Canvas, matrix: Matrix)
@@ -67,21 +67,15 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
     }
 
     inner class LayerDescription(val layer: Layer, val initialMatrix: Matrix) {
+        var activated: Boolean = true
         fun drawItself(canvas: Canvas) {
+            if (!activated) return
+
             val matrix = Matrix()
             matrix.postConcat(initialMatrix)
             matrix.postConcat(imageSourceMatrix)
             layer.drawItself(canvas, matrix)
         }
-    }
-
-
-    fun addLayer(layer: Layer, initialMatrix: Matrix) {
-        layers.add(LayerDescription(layer, initialMatrix))
-    }
-
-    fun clearLayers() {
-        layers.clear()
     }
 
     private val scaleGestureDetector = ScaleGestureDetector(context, object : OnScaleGestureListener {
