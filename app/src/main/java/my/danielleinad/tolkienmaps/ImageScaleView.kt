@@ -54,12 +54,20 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         val top: Float,
         val right: Float,
         val bottom: Float,
+        val fill: Boolean,
         val paint: Paint) : Layer {
         override fun drawItself(canvas: Canvas, matrix: Matrix) {
             // TODO better name for resRect!!
             val resRect = RectF(left, top, right, bottom)
             matrix.mapRect(resRect)
-            canvas.drawRect(resRect, paint)
+            if (fill) {
+                canvas.drawRect(resRect, paint)
+            } else {
+                canvas.drawLine(resRect.left, resRect.top, resRect.right, resRect.top, paint)
+                canvas.drawLine(resRect.left, resRect.bottom, resRect.right, resRect.bottom, paint)
+                canvas.drawLine(resRect.left, resRect.top, resRect.left, resRect.bottom, paint)
+                canvas.drawLine(resRect.right, resRect.top, resRect.right, resRect.bottom, paint)
+            }
         }
 
         override val width: Float = right - left

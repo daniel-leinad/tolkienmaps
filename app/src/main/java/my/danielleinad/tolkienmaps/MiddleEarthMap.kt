@@ -45,8 +45,9 @@ class MiddleEarthMap : Fragment() {
 
         val redPaint = Paint()
         redPaint.color = Color.RED
+        redPaint.strokeWidth = 5F
         val wilderlandBorders = binding.imageView.RectangleLayer(
-            0f, 0f, 2000f, 1000f, redPaint)
+            0f, 0f, wilderlandBitmap.width, wilderlandBitmap.height, false, redPaint)
         // is copy of wilderlandMatrix necessary?
         val wilderlandBordersLayer = binding.imageView.LayerDescription(wilderlandBorders, Matrix(wilderlandMatrix))
         binding.imageView.layers.add(wilderlandBordersLayer)
