@@ -190,11 +190,10 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
                 if (!layer.contains(currentPoint)) continue
 
                 val res = layer.onClickListener!!()
+                needInvalidation = true
                 if (res) break
             }
-            val currentX = currentPoint.x
-            val currentY = currentPoint.y
-            MessageShower.show("Clickadoo! at: $currentX, $currentY")
+            invalidateIfNeeded()
         }
     }
 
@@ -202,7 +201,6 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         super.onTouchEvent(event)
 
         if (event != null) {
-            needInvalidation = false
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     cachedPoints = mutableListOf(XYPoint(event.x, event.y))
@@ -241,11 +239,16 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
             }
             scaleGestureDetector.onTouchEvent(event)
 
-            if (needInvalidation) {
-                invalidate()
-            }
+            invalidateIfNeeded()
         }
 
         return true
+    }
+
+    private fun invalidateIfNeeded() {
+        if (needInvalidation) {
+            invalidate()
+            needInvalidation = false
+        }
     }
 }
