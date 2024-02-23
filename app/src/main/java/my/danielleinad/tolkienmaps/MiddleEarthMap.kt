@@ -40,6 +40,10 @@ class MiddleEarthMap : Fragment() {
         wilderlandMatrix.postScale(0.269F, 0.269F)
         wilderlandMatrix.postTranslate(1720F, 672F)
         val wilderlandLayer = binding.imageView.LayerDescription(wilderlandBitmap, wilderlandMatrix)
+        wilderlandLayer.onClickListener = {
+            MessageShower.show("clicked wilderland map!")
+            true
+        }
         binding.imageView.layers.add(wilderlandLayer)
         nonMainLayers.add(wilderlandLayer)
 

@@ -49,6 +49,8 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         override val height: Float = bitmap.height.toFloat()
     }
 
+    // TODO there is great confusion between what left, top, right, bottom means and width and height properties
+    // probably better to remove left, right, top, bottom from here
     inner class RectangleLayer(
         val left: Float,
         val top: Float,
@@ -71,11 +73,12 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         }
 
         override val width: Float = right - left
-        override val height: Float = top - bottom
+        override val height: Float = bottom - top
     }
 
     inner class LayerDescription(val layer: Layer, val initialMatrix: Matrix) {
         var activated: Boolean = true
+        var onClickListener: (() -> Boolean)? = null // return true to consume the click
         fun drawItself(canvas: Canvas) {
             if (!activated) return
 
@@ -83,6 +86,16 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
             matrix.postConcat(initialMatrix)
             matrix.postConcat(imageSourceMatrix)
             layer.drawItself(canvas, matrix)
+        }
+
+        fun contains(point: XYPoint): Boolean {
+            val matrix = Matrix()
+            matrix.postConcat(initialMatrix)
+            matrix.postConcat(imageSourceMatrix)
+            val rectRes = RectF(0F, 0F, layer.width, layer.height)
+            matrix.mapRect(rectRes)
+
+            return rectRes.contains(point.x, point.y)
         }
     }
 
@@ -160,13 +173,35 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         val imageHeight: Float = imageSource1.layer.height
         val scaleFactor = min(width / imageWidth, height / imageHeight)
         imageSourceMatrix.postScale(scaleFactor, scaleFactor)
+
+        setOnClickListener {
+            if (cachedPoints.size == 0) {
+                MessageShower.show("Something went wrong during click: no coordinates detected")
+                return@setOnClickListener
+            }
+
+            val currentPoint = cachedPoints[0]
+
+            for (i in layers.size-1 downTo 0) {
+                val layer = layers[i]
+
+                if (!layer.activated) continue
+                if (layer.onClickListener == null) continue
+                if (!layer.contains(currentPoint)) continue
+
+                val res = layer.onClickListener!!()
+                if (res) break
+            }
+            val currentX = currentPoint.x
+            val currentY = currentPoint.y
+            MessageShower.show("Clickadoo! at: $currentX, $currentY")
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         super.onTouchEvent(event)
-//        MessageShower.show("Touch event has happened!")
+
         if (event != null) {
-//            gestureDetector.onTouchEvent(event)
             needInvalidation = false
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -210,8 +245,7 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
                 invalidate()
             }
         }
-//        imageSourceMatrix.postScale(0.95F, 0.95F)
-//        invalidate()
+
         return true
     }
 }
