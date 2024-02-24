@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import my.danielleinad.tolkienmaps.databinding.FragmentMiddleEarthMapBinding
 
 class MiddleEarthMap : Fragment() {
@@ -40,8 +41,8 @@ class MiddleEarthMap : Fragment() {
         wilderlandMatrix.postScale(0.269F, 0.269F)
         wilderlandMatrix.postTranslate(1720F, 672F)
         val wilderlandLayer = binding.imageView.LayerDescription(wilderlandBitmap, wilderlandMatrix)
-        wilderlandLayer.onClickListener = {
-            MessageShower.show("clicked wilderland map!")
+        wilderlandLayer.onDoubleTapListener = {
+            findNavController().navigate(R.id.action_middleEarthMap_to_wilderlandMap)
             true
         }
         binding.imageView.layers.add(wilderlandLayer)
@@ -54,7 +55,7 @@ class MiddleEarthMap : Fragment() {
             0f, 0f, wilderlandBitmap.width, wilderlandBitmap.height, false, redPaint)
         // is copy of wilderlandMatrix necessary?
         val wilderlandBordersLayer = binding.imageView.LayerDescription(wilderlandBorders, Matrix(wilderlandMatrix))
-        wilderlandBordersLayer.onClickListener = {
+        wilderlandBordersLayer.onSingleTapConfirmedListener = {
             wilderlandLayer.activated = !wilderlandLayer.activated
             true
         }

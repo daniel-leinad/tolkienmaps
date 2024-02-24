@@ -55,16 +55,52 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
                 val layer = layers[i]
 
                 if (!layer.activated) continue
-                if (layer.onClickListener == null) continue
+                val onSingleTapConfirmedListener = layer.onSingleTapConfirmedListener ?: continue
                 if (!layer.contains(currentPoint)) continue
 
-                val res = layer.onClickListener!!()
+                val res = onSingleTapConfirmedListener()
                 needInvalidation = true
 
                 if (res) break
             }
 
             invalidateIfNeeded()
+
+            return true
+        }
+
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            val currentPoint = XYPoint(e.x, e.y)
+            for (i in layers.size-1 downTo 0) {
+                val layer = layers[i]
+
+                if (!layer.activated) continue
+                val onSingleTapListener = layer.onSingleTapListener ?: continue
+                if (!layer.contains(currentPoint)) continue
+
+                val res = onSingleTapListener()
+                needInvalidation = true
+
+                if (res) break
+            }
+
+            return true
+        }
+
+        override fun onDoubleTap(e: MotionEvent): Boolean {
+            val currentPoint = XYPoint(e.x, e.y)
+            for (i in layers.size-1 downTo 0) {
+                val layer = layers[i]
+
+                if (!layer.activated) continue
+                val onDoubleTapListener = layer.onDoubleTapListener ?: continue
+                if (!layer.contains(currentPoint)) continue
+
+                val res = onDoubleTapListener()
+                needInvalidation = true
+
+                if (res) break
+            }
 
             return true
         }
@@ -126,7 +162,9 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
 
     inner class LayerDescription(val layer: Layer, val initialMatrix: Matrix) {
         var activated: Boolean = true
-        var onClickListener: (() -> Boolean)? = null // return true to consume the click
+        var onSingleTapConfirmedListener: (() -> Boolean)? = null // return true to consume the click
+        var onSingleTapListener: (() -> Boolean)? = null // return true to consume the click
+        var onDoubleTapListener: (() -> Boolean)? = null // return true to consume the click
         fun drawItself(canvas: Canvas) {
             if (!activated) return
 
