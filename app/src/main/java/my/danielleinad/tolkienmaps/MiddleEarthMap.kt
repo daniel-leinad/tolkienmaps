@@ -1,9 +1,5 @@
 package my.danielleinad.tolkienmaps
 
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Color
@@ -20,7 +16,6 @@ class MiddleEarthMap : Fragment() {
     private var areNonMainLayersShown: Boolean = false
     private val nonMainLayers: MutableList<NonMainLayer> = mutableListOf()
     private lateinit var mainBitmap: ImageScaleView.BitMapLayer
-//    private lateinit var wilderlandBitmap: ImageScaleView.BitMapLayer
 
     private class NonMainLayer(val map: ImageScaleView.LayerDescription, val borders: ImageScaleView.LayerDescription) {
         var isMapShown: Boolean = false
@@ -36,12 +31,6 @@ class MiddleEarthMap : Fragment() {
         // Inflate the layout for this fragment
         // TODO pick a style and use one
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
-//        mainBitmap = binding.imageView.BitMapLayer(
-//            BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth),
-//            BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth_preview_3))
-//        wilderlandBitmap = binding.imageView.BitMapLayer(
-//            BitmapFactory.decodeResource(resources, R.drawable.map_wilderland),
-//            BitmapFactory.decodeResource(resources, R.drawable.map_wilderland_preview))
 
         constructNonMainLayers()
 
@@ -124,50 +113,5 @@ class MiddleEarthMap : Fragment() {
 
             // TODO add layers recursively
         }
-
-//        val wilderlandMatrix = Matrix()
-//        wilderlandMatrix.postScale(0.269F, 0.269F)
-//        wilderlandMatrix.postTranslate(1720F, 672F)
-//        val wilderlandMapLayer =
-//            binding.imageView.LayerDescription(wilderlandBitmap, wilderlandMatrix)
-//        wilderlandMapLayer.onDoubleTapListener = {
-//            findNavController().navigate(R.id.action_middleEarthMap_to_wilderlandMap)
-//            true
-//        }
-//
-//        val redPaint = Paint()
-//        redPaint.color = Color.RED
-//        redPaint.strokeWidth = 5F
-//        val wilderlandBorders = binding.imageView.RectangleLayer(
-//            0f, 0f, wilderlandBitmap.width, wilderlandBitmap.height, false, redPaint
-//        )
-//        // is copy of wilderlandMatrix necessary?
-//        val wilderlandBordersLayer =
-//            binding.imageView.LayerDescription(wilderlandBorders, Matrix(wilderlandMatrix))
-//
-//        val wilderlandLayer = NonMainLayer(wilderlandMapLayer, wilderlandBordersLayer)
-//
-//        wilderlandBordersLayer.onSingleTapConfirmedListener = {
-//            wilderlandLayer.isMapShown = !wilderlandLayer.isMapShown
-//            true
-//        }
-
-//        nonMainLayers.add(wilderlandLayer)
-    }
-
-    private fun createBitmap(): Bitmap {
-        val middleEarthBitMap = BitmapFactory.decodeResource(resources, R.drawable.map_middle_earth)
-        val transparentTestBitMap =
-            BitmapFactory.decodeResource(resources, R.drawable.transparent_test)
-        val bitmap = Bitmap.createBitmap(
-            middleEarthBitMap.width,
-            middleEarthBitMap.height,
-            middleEarthBitMap.config
-        )
-        val canvas = Canvas(bitmap)
-        canvas.drawBitmap(middleEarthBitMap, 0f, 0f, null)
-        val paint = Paint()
-        canvas.drawBitmap(transparentTestBitMap, 0f, 0f, paint)
-        return bitmap
     }
 }
