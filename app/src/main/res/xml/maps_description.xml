@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <map id="middle_earth" bitmap="@drawable/map_middle_earth" preview="@drawable/map_middle_earth_preview_3">
+        <position id="wilderland" scale="0.269" translate_x="1720" translate_y="672"/>
+        <action destination="wilderland" value="@id/action_middleEarthMap_to_wilderlandMap"/>
+    </map>
+    <map id="wilderland" bitmap="@drawable/map_wilderland" preview="@drawable/map_wilderland_preview"/>
+</root>
