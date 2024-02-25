@@ -5,10 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".WilderlandMap" >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <my.danielleinad.tolkienmaps.ImageScaleView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/wilderland" />
+        android:layout_height="match_parent"/>
+
+    <Button
+        android:id="@+id/showHideLayers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="show/hide layers" />
 
 </FrameLayout>
