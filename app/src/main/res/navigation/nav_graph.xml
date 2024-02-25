@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_middleEarthMap_to_wilderlandMap"
             app:destination="@id/wilderlandMap" />
+        <action
+            android:id="@+id/action_middleEarthMap_to_rohanGondorMordorMap"
+            app:destination="@id/rohanGondorMordorMap" />
     </fragment>
     <fragment
         android:id="@+id/wilderlandMap"
