@@ -7,5 +7,9 @@ class MessageShower {
         fun show(message: String) {
             Log.d("DAN-MESSAGE-SHOWER", message)
         }
+
+        fun warn(message: String) {
+            Log.w("DAN-MESSAGE-SHOWER-WARNING", message)
+        }
     }
 }
