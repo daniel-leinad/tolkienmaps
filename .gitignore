@@ -13,7 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
-app/src/main/res/drawable/*.jpg
+app/src/main/res/drawable/generated_*
 *.trace
 /app/src/main/res/drawable/*.png
 /image_source/*
