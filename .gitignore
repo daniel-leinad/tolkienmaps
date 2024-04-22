@@ -15,5 +15,4 @@
 local.properties
 app/src/main/res/drawable/generated_*
 *.trace
-/app/src/main/res/drawable/*.png
-/image_source/*
+/app/image_source/*.xcf
