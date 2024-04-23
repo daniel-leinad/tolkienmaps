@@ -79,6 +79,7 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
         for (position in mainMap.positions) {
             val matrix = Matrix()
             val otherMap = position.map
+            matrix.postRotate(position.rotate)
             matrix.postScale(position.scale, position.scale)
             matrix.postTranslate(position.translateX, position.translateY)
             val mapLayer = imageView.LayerDescription(imageView.BitMapLayer(otherMap.bitmap, otherMap.preview), matrix)

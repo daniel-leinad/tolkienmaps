@@ -143,16 +143,20 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         val fill: Boolean,
         val paint: Paint) : Layer {
         override fun drawItself(canvas: Canvas, matrix: Matrix) {
-            // TODO better name for resRect!!
-            val resRect = RectF(left, top, right, bottom)
-            matrix.mapRect(resRect)
+//            // TODO better name for resRect!!
+//            val resRect = RectF(left, top, right, bottom)
+//            matrix.mapRect(resRect)
+            val points = floatArrayOf(left, top, right, top, left, bottom, right, bottom)
+            matrix.mapPoints(points)
             if (fill) {
-                canvas.drawRect(resRect, paint)
+//                canvas.drawRect(resRect, paint)
+                // TODO
+                throw NotImplementedError()
             } else {
-                canvas.drawLine(resRect.left, resRect.top, resRect.right, resRect.top, paint)
-                canvas.drawLine(resRect.left, resRect.bottom, resRect.right, resRect.bottom, paint)
-                canvas.drawLine(resRect.left, resRect.top, resRect.left, resRect.bottom, paint)
-                canvas.drawLine(resRect.right, resRect.top, resRect.right, resRect.bottom, paint)
+                canvas.drawLine(points[0], points[1], points[2], points[3], paint)
+                canvas.drawLine(points[2], points[3], points[6], points[7], paint)
+                canvas.drawLine(points[4], points[5], points[6], points[7], paint)
+                canvas.drawLine(points[0], points[1], points[4], points[5], paint)
             }
         }
 
@@ -175,13 +179,20 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         }
 
         fun contains(point: XYPoint): Boolean {
+            // Because rotation is possible, instead of applying transformation matrix to the layer
+            // and checking whether the layer contains the point, we apply inverse transformation
+            // matrix to the point and then check whether the layer's original rectangle contains the point
             val matrix = Matrix()
             matrix.postConcat(initialMatrix)
             matrix.postConcat(imageSourceMatrix)
-            val rectRes = RectF(0F, 0F, layer.width, layer.height)
-            matrix.mapRect(rectRes)
+            val invertedMatrix = Matrix()
+            assert(matrix.invert(invertedMatrix))
+            var pointsArray = floatArrayOf(point.x, point.y)
+            invertedMatrix.mapPoints(pointsArray)
 
-            return rectRes.contains(point.x, point.y)
+            val rectRes = RectF(0F, 0F, layer.width, layer.height)
+
+            return rectRes.contains(pointsArray[0], pointsArray[1])
         }
     }
 

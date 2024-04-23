@@ -24,7 +24,8 @@ class MapsDescription private constructor(val maps: ImmutableMap<String, Map>) {
                 val map: Map,
                 val scale: Float,
                 val translateX: Float,
-                val translateY: Float
+                val translateY: Float,
+                val rotate: Float,
             )
 
             val positions: MutableList<Position> = mutableListOf()
@@ -71,7 +72,8 @@ class MapsDescription private constructor(val maps: ImmutableMap<String, Map>) {
                     val otherMap = maps[position.id]
                         // TODO maybe change exception
                         ?: throw Exception("Error while parsing @xml/maps_description: unknown map id: ${position.id}")
-                    map.positions.add(Map.Position(otherMap, position.scale, position.translateX, position.translateY))
+                    map.positions.add(
+                        Map.Position(otherMap, position.scale, position.translateX, position.translateY, position.rotate))
                 }
             }
 
@@ -121,19 +123,21 @@ private class MapsDescriptionXmlStructure(xmlParser: XmlResourceParser) {
             }
         }
     }
-    class Position(val id: String, val scale: Float, val translateX: Float, val translateY: Float) {
+    class Position(val id: String, val scale: Float, val translateX: Float, val translateY: Float, val rotate: Float) {
         companion object {
             fun parse(xmlParser: XmlResourceParser): Position {
                 var id: String? = null
                 var scale: Float? = null
                 var translateX: Float? = null
                 var translateY: Float? = null
+                var rotate: Float = 0F // default value
                 for (i in 0 until xmlParser.attributeCount) {
                     when (xmlParser.getAttributeName(i)) {
                         "id" -> { id = xmlParser.getAttributeValue(i) }
                         "scale" -> { scale = xmlParser.getAttributeFloatValue(i, 0F)}
                         "translate_x" -> { translateX = xmlParser.getAttributeIntValue(i, 0).toFloat() }
                         "translate_y" -> { translateY = xmlParser.getAttributeIntValue(i, 0).toFloat() }
+                        "rotate" -> { rotate = xmlParser.getAttributeIntValue(i, 0).toFloat() }
                     }
                 }
                 if (id == null || scale == null || translateX == null || translateY == null) {
@@ -148,7 +152,7 @@ private class MapsDescriptionXmlStructure(xmlParser: XmlResourceParser) {
                     xmlParser.next()
                 }
 
-                return Position(id, scale, translateX, translateY)
+                return Position(id, scale, translateX, translateY, rotate)
             }
         }
     }
