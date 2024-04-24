@@ -45,11 +45,7 @@
         android:name="my.danielleinad.tolkienmaps.AboutFragment"
         android:label="fragment_about"
         tools:layout="@layout/fragment_about" />
-    <fragment
-        android:id="@+id/rohanGondorMordorMap"
-        android:name="my.danielleinad.tolkienmaps.RohanGondorMordorMap"
-        android:label="fragment_rohan_gondor_mordor_map"
-        tools:layout="@layout/fragment_rohan_gondor_mordor_map" />
+
     <fragment
         android:id="@+id/middleEarthMap"
         android:name="my.danielleinad.tolkienmaps.MiddleEarthMap"
@@ -61,10 +57,32 @@
         <action
             android:id="@+id/action_middleEarthMap_to_rohanGondorMordorMap"
             app:destination="@id/rohanGondorMordorMap" />
+        <action
+            android:id="@+id/action_middleEarthMap_to_shireMap"
+            app:destination="@id/shireMap" />
     </fragment>
     <fragment
         android:id="@+id/wilderlandMap"
         android:name="my.danielleinad.tolkienmaps.WilderlandMap"
         android:label="fragment_wilderland_map"
-        tools:layout="@layout/fragment_wilderland_map" />
+        tools:layout="@layout/fragment_wilderland_map">
+        <action
+            android:id="@+id/action_wilderlandMap_to_throrMap"
+            app:destination="@id/throrMap" />
+    </fragment>
+    <fragment
+        android:id="@+id/rohanGondorMordorMap"
+        android:name="my.danielleinad.tolkienmaps.RohanGondorMordorMap"
+        android:label="fragment_rohan_gondor_mordor_map"
+        tools:layout="@layout/fragment_rohan_gondor_mordor_map" />
+    <fragment
+        android:id="@+id/shireMap"
+        android:name="my.danielleinad.tolkienmaps.ShireMap"
+        android:label="fragment_shire_map"
+        tools:layout="@layout/fragment_shire_map" />
+    <fragment
+        android:id="@+id/throrMap"
+        android:name="my.danielleinad.tolkienmaps.ThrorMap"
+        android:label="fragment_thror_map"
+        tools:layout="@layout/fragment_thror_map" />
 </navigation>

@@ -8,9 +8,11 @@
         <action destination="rohan_gondor_mordor" value="@id/action_middleEarthMap_to_rohanGondorMordorMap"/>
 
         <position id="shire" scale="0.05" translate_x="900" translate_y="1160" rotate="-5"/>
+        <action destination="shire" value="@id/action_middleEarthMap_to_shireMap"/>
     </map>
     <map id="wilderland" bitmap="@drawable/generated_map_wilderland" preview="@drawable/generated_preview_map_wilderland">
         <position id="thror" scale="0.05" translate_x="3350" translate_y="800" rotate="90"/>
+        <action destination="thror" value="@id/action_wilderlandMap_to_throrMap"/>
     </map>
     <map id="rohan_gondor_mordor" bitmap="@drawable/generated_map_rohan" preview="@drawable/generated_preview_map_rohan"/>
     <map id="shire" bitmap="@drawable/generated_map_shire" preview="@drawable/generated_preview_map_shire"/>
