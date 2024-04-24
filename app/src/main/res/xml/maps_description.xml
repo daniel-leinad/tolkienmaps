@@ -7,7 +7,7 @@
         <position id="rohan_gondor_mordor" scale="0.269" translate_x="1720" translate_y="2000"/>
         <action destination="rohan_gondor_mordor" value="@id/action_middleEarthMap_to_rohanGondorMordorMap"/>
 
-        <position id="shire" scale="0.269" translate_x="100" translate_y="200" rotate="15"/>
+        <position id="shire" scale="0.05" translate_x="900" translate_y="1160" rotate="-5"/>
     </map>
     <map id="wilderland" bitmap="@drawable/generated_map_wilderland" preview="@drawable/generated_preview_map_wilderland"/>
     <map id="rohan_gondor_mordor" bitmap="@drawable/generated_map_rohan" preview="@drawable/generated_preview_map_rohan"/>
