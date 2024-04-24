@@ -31,8 +31,7 @@ class LotrMenu : Fragment() {
         }
 
         binding.shireButton.setOnClickListener {
-            // TODO
-            showMessage("Shire")
+            findNavController().navigate(R.id.action_lotrMenu_to_shireMap)
         }
 
         binding.rohanGondorMordorButton.setOnClickListener {

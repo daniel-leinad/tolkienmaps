@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import my.danielleinad.tolkienmaps.databinding.FragmentHobbitMenuBinding
 
 
@@ -27,13 +28,11 @@ class HobbitMenu : Fragment() {
 
 
         binding.throrMapButton.setOnClickListener {
-            // TODO
-            showMessage("Thror's map")
+            findNavController().navigate(R.id.action_hobbitMenu_to_throrMap)
         }
 
         binding.wilderlandButton.setOnClickListener {
-            // TODO
-            showMessage("Wilderland")
+            findNavController().navigate(R.id.action_hobbitMenu_to_wilderlandMap)
         }
 
     }

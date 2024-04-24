@@ -27,7 +27,14 @@
         android:id="@+id/hobbitMenu"
         android:name="my.danielleinad.tolkienmaps.HobbitMenu"
         android:label="fragment_hobbit_menu"
-        tools:layout="@layout/fragment_hobbit_menu" />
+        tools:layout="@layout/fragment_hobbit_menu" >
+        <action
+            android:id="@+id/action_hobbitMenu_to_wilderlandMap"
+            app:destination="@id/wilderlandMap" />
+        <action
+            android:id="@+id/action_hobbitMenu_to_throrMap"
+            app:destination="@id/throrMap" />
+    </fragment>
     <fragment
         android:id="@+id/lotrMenu"
         android:name="my.danielleinad.tolkienmaps.LotrMenu"
@@ -39,6 +46,9 @@
         <action
             android:id="@+id/action_lotrMenu_to_middleEarthMap"
             app:destination="@id/middleEarthMap" />
+        <action
+            android:id="@+id/action_lotrMenu_to_shireMap"
+            app:destination="@id/shireMap" />
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
