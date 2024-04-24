@@ -76,15 +76,17 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
         redPaint.color = Color.RED
         redPaint.strokeWidth = 5F
 
+        val actions = mainMap.actions
         val initialMatrix = Matrix()
-        appendMapLayersRecursively(mainMap, initialMatrix, imageView, redPaint)
+        appendMapLayersRecursively(mainMap, initialMatrix, imageView, redPaint, actions)
     }
 
     private fun appendMapLayersRecursively(
         mapDescription: MapsDescription.Companion.Map,
         initialMatrix: Matrix,
         imageView: ImageScaleView,
-        redPaint: Paint
+        redPaint: Paint,
+        actions: MutableMap<MapsDescription.Companion.Map, Int>
     ) {
         for (position in mapDescription.positions) {
             val matrix = Matrix()
@@ -101,7 +103,7 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
                     otherMap.preview
                 ), matrix
             )
-            val action = mapDescription.actions[otherMap]
+            val action = actions[otherMap]
             if (action == null) {
                 MessageShower.warn("Action not found for map ${otherMap.id}")
             } else {
@@ -130,7 +132,7 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
 
             nonMainLayers.add(layer)
 
-            appendMapLayersRecursively(otherMap, matrix, imageView, redPaint)
+            appendMapLayersRecursively(otherMap, matrix, imageView, redPaint, actions)
         }
     }
 }

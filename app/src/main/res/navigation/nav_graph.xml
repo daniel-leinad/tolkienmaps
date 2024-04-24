@@ -70,6 +70,9 @@
         <action
             android:id="@+id/action_middleEarthMap_to_shireMap"
             app:destination="@id/shireMap" />
+        <action
+            android:id="@+id/action_middleEarthMap_to_throrMap"
+            app:destination="@id/throrMap" />
     </fragment>
     <fragment
         android:id="@+id/wilderlandMap"
