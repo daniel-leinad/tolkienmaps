@@ -34,10 +34,10 @@ project.tasks.register("generateMaps") {
 
             // create preview
             val sourceImage = ImageIO.read(File(it.path))
-            val factor = 2
+            val factor = 1.5
             val previewWidth = sourceImage.width / factor
             val previewHeight = sourceImage.height / factor
-            val previewImage = resizeImage(sourceImage, previewWidth, previewHeight)
+            val previewImage = resizeImage(sourceImage, previewWidth.toInt(), previewHeight.toInt())
             val previewImagePath = destDir.file("generated_preview_" + it.name)
             ImageIO.write(previewImage, it.extension, File(previewImagePath.toString()))
         }
