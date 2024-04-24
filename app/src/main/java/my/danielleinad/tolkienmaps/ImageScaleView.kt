@@ -247,6 +247,12 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         val scaleFactor = min(width / imageWidth, height / imageHeight)
         imageSourceMatrix.postScale(scaleFactor, scaleFactor)
 
+        // centering
+        val topOffset = ((bottom - top) / 2) - ((imageSource1.layer.height * scaleFactor) / 2)
+        val leftOffset = ((right - left) / 2) - ((imageSource1.layer.width * scaleFactor) / 2)
+
+        imageSourceMatrix.postTranslate(leftOffset, topOffset)
+
 //        setOnClickListener {
 //            if (cachedPoints.size == 0) {
 //                MessageShower.show("Something went wrong during click: no coordinates detected")
