@@ -76,14 +76,32 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
         redPaint.color = Color.RED
         redPaint.strokeWidth = 5F
 
-        for (position in mainMap.positions) {
+        val initialMatrix = Matrix()
+        appendMapLayersRecursively(mainMap, initialMatrix, imageView, redPaint)
+    }
+
+    private fun appendMapLayersRecursively(
+        mapDescription: MapsDescription.Companion.Map,
+        initialMatrix: Matrix,
+        imageView: ImageScaleView,
+        redPaint: Paint
+    ) {
+        for (position in mapDescription.positions) {
             val matrix = Matrix()
-            val otherMap = position.map
             matrix.postRotate(position.rotate)
             matrix.postScale(position.scale, position.scale)
             matrix.postTranslate(position.translateX, position.translateY)
-            val mapLayer = imageView.LayerDescription(imageView.BitMapLayer(otherMap.bitmap, otherMap.preview), matrix)
-            val action = mainMap.actions[otherMap]
+            matrix.postConcat(initialMatrix)
+
+            val otherMap = position.map
+
+            val mapLayer = imageView.LayerDescription(
+                imageView.BitMapLayer(
+                    otherMap.bitmap,
+                    otherMap.preview
+                ), matrix
+            )
+            val action = mapDescription.actions[otherMap]
             if (action == null) {
                 MessageShower.warn("Action not found for map ${otherMap.id}")
             } else {
@@ -99,8 +117,8 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
                 otherMap.bitmap.width.toFloat(),
                 otherMap.bitmap.height.toFloat(),
                 false,
-                redPaint)
-            // TODO is copying matrix necessary?
+                redPaint
+            )
             val bordersLayer = imageView.LayerDescription(borders, Matrix(matrix))
 
             val layer = NonMainLayer(mapLayer, bordersLayer)
@@ -112,7 +130,7 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
 
             nonMainLayers.add(layer)
 
-            // TODO add layers recursively
+            appendMapLayersRecursively(otherMap, matrix, imageView, redPaint)
         }
     }
 }
