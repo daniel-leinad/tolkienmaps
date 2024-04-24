@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
     <map id="middle_earth" bitmap="@drawable/generated_map_middle_earth" preview="@drawable/generated_preview_map_middle_earth">
-        <position id="wilderland" scale="0.269" translate_x="1720" translate_y="672"/>
+        <position id="wilderland" scale="0.265" translate_x="1790" translate_y="665"/>
         <action destination="wilderland" value="@id/action_middleEarthMap_to_wilderlandMap"/>
 
-        <position id="rohan_gondor_mordor" scale="0.269" translate_x="1720" translate_y="2000"/>
+        <position id="rohan_gondor_mordor" scale="0.225" translate_x="1950" translate_y="2100"/>
         <action destination="rohan_gondor_mordor" value="@id/action_middleEarthMap_to_rohanGondorMordorMap"/>
 
         <position id="shire" scale="0.05" translate_x="900" translate_y="1160" rotate="-5"/>
