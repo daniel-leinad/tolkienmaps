@@ -176,6 +176,7 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         var onSingleTapConfirmedListener: (() -> Boolean)? = null // return true to consume the click
         var onSingleTapListener: (() -> Boolean)? = null // return true to consume the click
         var onDoubleTapListener: (() -> Boolean)? = null // return true to consume the click
+        var onTouchListener: (() -> Boolean)? = null // return true to consume touch
         fun drawItself(canvas: Canvas) {
             if (!activated) return
 
@@ -289,8 +290,22 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         if (event != null) {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    cachedPoints = mutableListOf(XYPoint(event.x, event.y))
+                    val currentPoint = XYPoint(event.x, event.y)
+                    cachedPoints = mutableListOf(currentPoint)
                     MessageShower.show("Action down!")
+
+                    for (i in layers.size-1 downTo 0) {
+                        val layer = layers[i]
+
+                        if (!layer.activated) continue
+                        val onTouchListener = layer.onTouchListener ?: continue
+                        if (!layer.contains(currentPoint)) continue
+
+                        val res = onTouchListener()
+                        needInvalidation = true
+
+                        if (res) break
+                    }
                 }
                 MotionEvent.ACTION_POINTER_DOWN -> MessageShower.show("pointer down!")
                 MotionEvent.ACTION_MOVE -> {
