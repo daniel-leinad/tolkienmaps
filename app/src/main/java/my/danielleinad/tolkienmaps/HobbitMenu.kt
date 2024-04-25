@@ -18,7 +18,6 @@ class HobbitMenu : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // TODO pick a style and use one
         binding = FragmentHobbitMenuBinding.inflate(layoutInflater)
         return binding.root
     }

@@ -28,8 +28,6 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inflate the layout for this fragment
-        // TODO pick a style and use one
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
 
         constructNonMainLayers()

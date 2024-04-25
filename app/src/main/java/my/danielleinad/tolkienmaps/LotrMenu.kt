@@ -17,7 +17,6 @@ class LotrMenu : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // TODO pick a style and use one
         binding = FragmentLotrMenuBinding.inflate(layoutInflater)
         return binding.root
     }

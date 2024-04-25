@@ -19,7 +19,6 @@ class MainMenu : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // TODO pick a style and use one
         binding = FragmentMainMenuBinding.inflate(layoutInflater)
         return binding.root
     }
