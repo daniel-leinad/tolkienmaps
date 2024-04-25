@@ -144,9 +144,6 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
         val fill: Boolean,
         val paint: Paint) : Layer {
         override fun drawItself(canvas: Canvas, matrix: Matrix) {
-//            // TODO better name for resRect!!
-//            val resRect = RectF(left, top, right, bottom)
-//            matrix.mapRect(resRect)
             val points = floatArrayOf(left, top, right, top, left, bottom, right, bottom)
             matrix.mapPoints(points)
             if (fill) {
@@ -311,10 +308,8 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
                 MotionEvent.ACTION_MOVE -> {
                     val pointerCount = event.pointerCount
                     val numberOfRelevantPoints = min(pointerCount, 2)
-                    if (numberOfRelevantPoints != cachedPoints.size) {
-                        // TODO remove debug message
-                        MessageShower.show("Number pointers change!")
-                    } else if (numberOfRelevantPoints != 0) {
+                    if ((numberOfRelevantPoints == cachedPoints.size)
+                        && (numberOfRelevantPoints != 0)) {
                         var xCachedSum = 0F
                         var yCachedSum = 0F
                         var xNewSum = 0F
