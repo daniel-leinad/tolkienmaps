@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.GestureDetector
@@ -149,9 +150,15 @@ class ImageScaleView(context: Context, attrs: AttributeSet) : View(context, attr
             val points = floatArrayOf(left, top, right, top, left, bottom, right, bottom)
             matrix.mapPoints(points)
             if (fill) {
-//                canvas.drawRect(resRect, paint)
-                // TODO
-                throw NotImplementedError()
+                val path = Path()
+                path.fillType = Path.FillType.EVEN_ODD
+                path.moveTo(points[0], points[1])
+                path.lineTo(points[2], points[3])
+                path.lineTo(points[6], points[7])
+                path.lineTo(points[4], points[5])
+                path.close()
+
+                canvas.drawPath(path, paint)
             } else {
                 canvas.drawLine(points[0], points[1], points[2], points[3], paint)
                 canvas.drawLine(points[2], points[3], points[6], points[7], paint)
