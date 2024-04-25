@@ -17,7 +17,7 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
     private val nonMainLayers: MutableList<NonMainLayer> = mutableListOf()
     private lateinit var mainBitmap: ImageScaleView.BitMapLayer
 
-    private class NonMainLayer(val map: ImageScaleView.LayerDescription, val borders: ImageScaleView.LayerDescription) {
+    private class NonMainLayer(val map: ImageScaleView.LayerDescription, val container: ImageScaleView.LayerDescription, val borders: ImageScaleView.LayerDescription) {
         var isMapShown: Boolean = false
             set(value) {
                 field = value
@@ -37,16 +37,8 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
         binding.imageView.layers.add(binding.imageView.LayerDescription(mainBitmap, Matrix()))
         for (layer in nonMainLayers) {
             binding.imageView.layers.add(layer.map)
+            binding.imageView.layers.add(layer.container)
             binding.imageView.layers.add(layer.borders)
-        }
-
-        fun hideShowLayers() {
-            for (layerDescription in nonMainLayers) {
-                layerDescription.map.activated = areNonMainLayersShown && layerDescription.isMapShown
-                layerDescription.borders.activated = areNonMainLayersShown
-            }
-
-            binding.imageView.invalidate()
         }
 
         binding.showHideLayers.setOnClickListener {
@@ -72,21 +64,26 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
 
         mainBitmap = imageView.BitMapLayer(mainMap.bitmap, mainMap.preview)
 
-        val redPaint = Paint()
-        redPaint.color = Color.RED
-        redPaint.strokeWidth = 5F
+        val containerPaint = Paint()
+        containerPaint.color = Color.argb(20, 0, 50, 250)
+        containerPaint.strokeWidth = 5F
+
+        val borderPaint = Paint()
+        borderPaint.color = Color.DKGRAY
+        borderPaint.strokeWidth = 5F
 
         val actions = mainMap.actions
         val initialMatrix = Matrix()
-        appendMapLayersRecursively(mainMap, initialMatrix, imageView, redPaint, actions)
+        appendMapLayersRecursively(mainMap, initialMatrix, imageView, actions, containerPaint, borderPaint)
     }
 
     private fun appendMapLayersRecursively(
         mapDescription: MapsDescription.Companion.Map,
         initialMatrix: Matrix,
         imageView: ImageScaleView,
-        redPaint: Paint,
-        actions: MutableMap<MapsDescription.Companion.Map, Int>
+        actions: MutableMap<MapsDescription.Companion.Map, Int>,
+        containerPaint: Paint,
+        borderPaint: Paint,
     ) {
         for (position in mapDescription.positions) {
             val matrix = Matrix()
@@ -113,26 +110,47 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
                 }
             }
 
+            val container = imageView.RectangleLayer(
+                0F,
+                0F,
+                otherMap.bitmap.width.toFloat(),
+                otherMap.bitmap.height.toFloat(),
+                true,
+                containerPaint
+            )
+            val containerLayer = imageView.LayerDescription(container, Matrix(matrix))
+
             val borders = imageView.RectangleLayer(
                 0F,
                 0F,
                 otherMap.bitmap.width.toFloat(),
                 otherMap.bitmap.height.toFloat(),
                 false,
-                redPaint
+                borderPaint
             )
-            val bordersLayer = imageView.LayerDescription(borders, Matrix(matrix))
 
-            val layer = NonMainLayer(mapLayer, bordersLayer)
+            val borderLayer = imageView.LayerDescription(borders, Matrix(matrix))
 
-            bordersLayer.onSingleTapConfirmedListener = {
+            val layer = NonMainLayer(mapLayer, containerLayer, borderLayer)
+
+            containerLayer.onSingleTapConfirmedListener = {
                 layer.isMapShown = !layer.isMapShown
                 true
             }
 
             nonMainLayers.add(layer)
 
-            appendMapLayersRecursively(otherMap, matrix, imageView, redPaint, actions)
+            appendMapLayersRecursively(otherMap, matrix, imageView, actions, containerPaint, borderPaint)
         }
+    }
+
+    private fun hideShowLayers() {
+        for (layerDescription in nonMainLayers) {
+            layerDescription.map.activated = areNonMainLayersShown && layerDescription.isMapShown
+            layerDescription.container.activated = areNonMainLayersShown
+            layerDescription.borders.activated = areNonMainLayersShown
+        }
+
+        binding.imageView.invalidate()
     }
 }
