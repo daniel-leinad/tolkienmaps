@@ -20,6 +20,7 @@ import my.danielleinad.tolkienmaps.resources.CachedXmlResourceParser
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
 import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
 import my.danielleinad.layeredscalableview.LayeredScalableView.LayerDescription
+import kotlin.math.absoluteValue
 
 const val TAG = "TolkienMapFragment"
 
@@ -173,6 +174,8 @@ class OptimizedBitmapLayerView(private val original: Bitmap, private val lowerRe
         val f = FloatArray(9)
         matrix.getValues(f)
         val scaleX = f[Matrix.MSCALE_X]
+        val skewX = f[Matrix.MSKEW_X]
+        val finalScale = scaleX + skewX.absoluteValue // TODO this is absolutely mathematically wrong
 
         val correctingFactor = if (context.isMoving) {
             0.5
@@ -180,7 +183,7 @@ class OptimizedBitmapLayerView(private val original: Bitmap, private val lowerRe
             // TODO why do we need this factor in this case
             1.5
         }
-        val resultingWidth = original.width * scaleX * correctingFactor
+        val resultingWidth = original.width * finalScale * correctingFactor
 
         if (resultingWidth < lowestRes.width) {
             val lowestResScale = original.width.toFloat() / lowestRes.width.toFloat()
