@@ -20,8 +20,9 @@ fun parseTolkienMapsUIStructure(resources: Resources): TolkienMapsUIStructure {
         val mapId = xmlMap.id
 
         val bitmap = BitmapFactory.decodeResource(resources, xmlMap.bitmap)
-        val previewBitmap = BitmapFactory.decodeResource(resources, xmlMap.preview)
-        representations[mapId] = TolkienMapUIRepresentation(bitmap, previewBitmap)
+        val lowerRes = BitmapFactory.decodeResource(resources, xmlMap.lowerRes)
+        val lowestRes = BitmapFactory.decodeResource(resources, xmlMap.lowestRes)
+        representations[mapId] = TolkienMapUIRepresentation(bitmap, lowerRes, lowestRes)
 
         for (action in xmlMap.actions) {
             actions[Pair(mapId, action.destination)] = action.value
@@ -32,27 +33,28 @@ fun parseTolkienMapsUIStructure(resources: Resources): TolkienMapsUIStructure {
 }
 
 private class TolkienMapsUIStructureXml(xmlParser: XmlResourceParser) {
-    class Map(val id: String, val bitmap: Int, val preview: Int) {
+    class Map(val id: String, val bitmap: Int, val lowerRes: Int, val lowestRes: Int) {
         val actions: MutableList<Action> = mutableListOf()
 
         companion object {
             fun parse(xmlParser: XmlResourceParser): Map {
                 var id: String? = null
                 var bitmap: Int? = null
-                var preview: Int? = null
+                var lowerRes: Int? = null
+                var lowestRes: Int? = null
                 for (i in 0 until xmlParser.attributeCount) {
                     when (xmlParser.getAttributeName(i)) {
                         "id" -> { id = xmlParser.getAttributeValue(i) }
-                        "bitmap" -> { bitmap = getAttributeResourceValueOrNull(xmlParser, i)
-                        }
-                        "preview" -> { preview = getAttributeResourceValueOrNull(xmlParser, i) }
+                        "bitmap" -> { bitmap = getAttributeResourceValueOrNull(xmlParser, i) }
+                        "lower_res" -> { lowerRes = getAttributeResourceValueOrNull(xmlParser, i) }
+                        "lowest_res" -> { lowestRes = getAttributeResourceValueOrNull(xmlParser, i) }
                     }
                 }
-                if (id == null || bitmap == null || preview == null) {
+                if (id == null || bitmap == null || lowerRes == null || lowestRes == null) {
                     throw XmlPullParserException("Error while parsing <map>: required attributes not found")
                 }
 
-                val map = Map(id, bitmap, preview)
+                val map = Map(id, bitmap, lowerRes, lowestRes)
 
                 while (true) {
                     xmlParser.next()

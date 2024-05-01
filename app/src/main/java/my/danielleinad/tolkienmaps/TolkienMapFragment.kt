@@ -26,7 +26,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     private lateinit var binding: FragmentMiddleEarthMapBinding
     private var areNonMainLayersShown: Boolean = false
     private val overlaidTolkienMaps: MutableList<OverlaidTolkienMap> = mutableListOf()
-    private lateinit var mainBitmap: BitMapLayerView
+    private lateinit var mainBitmap: OptimizedBitmapLayerView
     private val containerPaint: Paint = Paint()
     private val borderPaint = Paint()
     init {
@@ -75,7 +75,11 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         val mainMapRepresentation = tolkienMapsUIStructure.representations[mapId]
             ?: throw Exception("Representation not found for map $mapId")
 
-        mainBitmap = BitMapLayerView(mainMapRepresentation.bitmap, mainMapRepresentation.preview)
+        mainBitmap = OptimizedBitmapLayerView(
+            mainMapRepresentation.bitmap,
+            mainMapRepresentation.lowerRes,
+            mainMapRepresentation.lowestRes,
+        )
 
         val initialMatrix = Matrix()
         appendMapLayersRecursively(mainMap, initialMatrix, tolkienMapsUIStructure)
@@ -98,9 +102,10 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
             val otherMapRepresentation = tolkienMapsUIStructure.representations[otherMapId]?: throw Exception("Representation not found for")
 
             val mapLayer = imageView.LayerDescription(
-                BitMapLayerView(
+                OptimizedBitmapLayerView(
                     otherMapRepresentation.bitmap,
-                    otherMapRepresentation.preview
+                    otherMapRepresentation.lowerRes,
+                    otherMapRepresentation.lowestRes,
                 ), matrix
             )
             val action = tolkienMapsUIStructure.actions[Pair(mapId, otherMapId)]
@@ -162,24 +167,35 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     }
 }
 
-class BitMapLayerView(private val bitmap: Bitmap, private val previewBitmap: Bitmap) : LayerView {
+class OptimizedBitmapLayerView(private val original: Bitmap, private val lowerRes: Bitmap, private val lowestRes: Bitmap) : LayerView {
     override fun drawItself(canvas: Canvas, matrix: Matrix) {
         val f = FloatArray(9)
         matrix.getValues(f)
         val scaleX = f[Matrix.MSCALE_X]
-        val previewScale = bitmap.width.toFloat() / previewBitmap.width.toFloat()
-        if (scaleX < 1) {
+
+        val correctingFactor = 1.5 // TODO why do we need to introduce it
+        val resultingWidth = original.width * scaleX * correctingFactor
+
+        if (resultingWidth < lowestRes.width) {
+            val lowestResScale = original.width.toFloat() / lowestRes.width.toFloat()
             val resMatrix = Matrix()
-            resMatrix.postScale(previewScale, previewScale)
+            resMatrix.postScale(lowestResScale, lowestResScale)
             resMatrix.postConcat(matrix)
-            canvas.drawBitmap(previewBitmap, resMatrix, null)
+            canvas.drawBitmap(lowestRes, resMatrix, null)
+        } else if (resultingWidth < lowerRes.width) {
+            val lowerResScale = original.width.toFloat() / lowerRes.width.toFloat()
+
+            val resMatrix = Matrix()
+            resMatrix.postScale(lowerResScale, lowerResScale)
+            resMatrix.postConcat(matrix)
+            canvas.drawBitmap(lowerRes, resMatrix, null)
         } else {
-            canvas.drawBitmap(bitmap, matrix, null)
+            canvas.drawBitmap(original, matrix, null)
         }
     }
 
-    override val width: Float = bitmap.width.toFloat()
-    override val height: Float = bitmap.height.toFloat()
+    override val width: Float = original.width.toFloat()
+    override val height: Float = original.height.toFloat()
 }
 
 class RectangleLayerView(
