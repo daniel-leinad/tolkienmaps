@@ -10,12 +10,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import my.danielleinad.tolkienmaps.databinding.FragmentMiddleEarthMapBinding
+import my.danielleinad.tolkienmaps.resources.CachedXmlResourceParser
+import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
+import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
 
-open class TolkienMapFragment(val mapId: String) : Fragment() {
+open class TolkienMapFragment(private val mapId: String) : Fragment() {
     private lateinit var binding: FragmentMiddleEarthMapBinding
     private var areNonMainLayersShown: Boolean = false
     private val nonMainLayers: MutableList<NonMainLayer> = mutableListOf()
     private lateinit var mainBitmap: ImageScaleView.BitMapLayer
+    private val containerPaint: Paint = Paint()
+    private val borderPaint = Paint()
+    init {
+        containerPaint.color = Color.argb(20, 0, 50, 250)
+        containerPaint.strokeWidth = 5F
+
+        borderPaint.color = Color.DKGRAY
+        borderPaint.strokeWidth = 5F
+    }
 
     private class NonMainLayer(val map: ImageScaleView.LayerDescription, val container: ImageScaleView.LayerDescription, val borders: ImageScaleView.LayerDescription) {
         var isMapShown: Boolean = false
@@ -56,51 +68,44 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
     }
 
     private fun constructNonMainLayers() {
-        val mapsDescription = MapsDescription.getMapsDescription(resources)
-        val mainMap = mapsDescription.maps[mapId]?: throw Exception("Unknown map: $mapId")
-        val imageView = binding.imageView
+        val tolkienMaps = CachedXmlResourceParser.getTolkienMaps(resources)
+        val tolkienMapsUIStructure = CachedXmlResourceParser.getTolkienMapsUIStructure(resources)
+        val mainMap = tolkienMaps.maps[mapId]?: throw Exception("Unknown map: $mapId")
 
-        mainBitmap = imageView.BitMapLayer(mainMap.bitmap, mainMap.preview)
+        val mainMapRepresentation = tolkienMapsUIStructure.representations[mapId]
+            ?: throw Exception("Representation not found for map $mapId")
 
-        val containerPaint = Paint()
-        containerPaint.color = Color.argb(20, 0, 50, 250)
-        containerPaint.strokeWidth = 5F
+        mainBitmap = binding.imageView.BitMapLayer(mainMapRepresentation.bitmap, mainMapRepresentation.preview)
 
-        val borderPaint = Paint()
-        borderPaint.color = Color.DKGRAY
-        borderPaint.strokeWidth = 5F
-
-        val actions = mainMap.actions
         val initialMatrix = Matrix()
-        appendMapLayersRecursively(mainMap, initialMatrix, imageView, actions, containerPaint, borderPaint)
+        appendMapLayersRecursively(mainMap, initialMatrix, tolkienMapsUIStructure)
     }
 
     private fun appendMapLayersRecursively(
-        mapDescription: MapsDescription.Companion.Map,
+        tolkienMap: TolkienMaps.TolkienMap,
         initialMatrix: Matrix,
-        imageView: ImageScaleView,
-        actions: MutableMap<MapsDescription.Companion.Map, Int>,
-        containerPaint: Paint,
-        borderPaint: Paint,
+        tolkienMapsUIStructure: TolkienMapsUIStructure,
     ) {
-        for (position in mapDescription.positions) {
+        val imageView = binding.imageView
+        for (position in tolkienMap.positions) {
             val matrix = Matrix()
             matrix.postRotate(position.rotate)
             matrix.postScale(position.scale, position.scale)
             matrix.postTranslate(position.translateX, position.translateY)
             matrix.postConcat(initialMatrix)
 
-            val otherMap = position.map
+            val otherMapId = position.map.id
+            val otherMapRepresentation = tolkienMapsUIStructure.representations[otherMapId]?: throw Exception("Representation not found for")
 
             val mapLayer = imageView.LayerDescription(
                 imageView.BitMapLayer(
-                    otherMap.bitmap,
-                    otherMap.preview
+                    otherMapRepresentation.bitmap,
+                    otherMapRepresentation.preview
                 ), matrix
             )
-            val action = actions[otherMap]
+            val action = tolkienMapsUIStructure.actions[Pair(mapId, otherMapId)]
             if (action == null) {
-                MessageShower.warn("Action not found for map ${otherMap.id}")
+                MessageShower.warn("Action not found for map $otherMapId")
             } else {
                 mapLayer.onDoubleTapListener = {
                     findNavController().navigate(action)
@@ -111,8 +116,8 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
             val container = imageView.RectangleLayer(
                 0F,
                 0F,
-                otherMap.bitmap.width.toFloat(),
-                otherMap.bitmap.height.toFloat(),
+                otherMapRepresentation.bitmap.width.toFloat(),
+                otherMapRepresentation.bitmap.height.toFloat(),
                 true,
                 containerPaint
             )
@@ -121,8 +126,8 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
             val borders = imageView.RectangleLayer(
                 0F,
                 0F,
-                otherMap.bitmap.width.toFloat(),
-                otherMap.bitmap.height.toFloat(),
+                otherMapRepresentation.bitmap.width.toFloat(),
+                otherMapRepresentation.bitmap.height.toFloat(),
                 false,
                 borderPaint
             )
@@ -138,7 +143,7 @@ open class TolkienMapFragment(val mapId: String) : Fragment() {
 
             nonMainLayers.add(layer)
 
-            appendMapLayersRecursively(otherMap, matrix, imageView, actions, containerPaint, borderPaint)
+            appendMapLayersRecursively(position.map, matrix, tolkienMapsUIStructure)
         }
     }
 

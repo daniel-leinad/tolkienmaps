@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<!--  This is an auxiliary resource whose purpose is to serve as a default empty/null value  -->
+<!--  This resource should never be directly used  -->
+</selector>
