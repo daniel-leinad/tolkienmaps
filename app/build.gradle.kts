@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         // TODO there should be a better way to debug app separately
-        applicationId = "my.danielleinad.tolkienmaps.debug"
+        applicationId = "my.danielleinad.tolkienmaps"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -28,6 +28,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
         }
     }
     compileOptions {
