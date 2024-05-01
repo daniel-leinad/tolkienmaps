@@ -53,7 +53,7 @@ android {
     }
 
     apply(from = "generateMaps.gradle.kts")
-    // TODO add resource compatibility check (tolkien_maps.xml, tolkien_maps_ui_structure.xml)
+    apply(from = "checkTolkienMapsResourceConsistency.gradle.kts")
 
 }
 
