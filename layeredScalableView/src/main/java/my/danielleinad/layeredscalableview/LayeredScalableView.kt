@@ -1,6 +1,5 @@
 package my.danielleinad.layeredscalableview
 
-import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.RectF
@@ -11,12 +10,14 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import kotlin.math.min
 
-class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context, attrs) {
+class LayeredScalableView(context: android.content.Context, attrs: AttributeSet) : View(context, attrs) {
     val layers: MutableList<LayerDescription> = mutableListOf()
 
     private var containerMatrix = Matrix()
     private var cachedPoints: MutableList<XYPoint> = mutableListOf()
     private var needInvalidation = false
+
+    private var isMoving = false
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -87,8 +88,13 @@ class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context,
 
                         val dX = (xNewSum - xCachedSum) / numberOfRelevantPoints
                         val dY = (yNewSum - yCachedSum) / numberOfRelevantPoints
+
                         containerMatrix.postTranslate(dX, dY)
                         needInvalidation = true
+
+                        if ((dX > 0) || (dY > 0)) {
+                            isMoving = true
+                        }
                     }
 
                     cachedPoints.clear()
@@ -96,6 +102,7 @@ class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context,
                         cachedPoints.add(XYPoint(event.getX(i), event.getY(i)))
                     }
                 }
+                else -> isMoving = false
             }
             scaleGestureDetector.onTouchEvent(event)
             gestureDetector.onTouchEvent(event)
@@ -209,7 +216,9 @@ class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context,
             val matrix = Matrix()
             matrix.postConcat(initialMatrix)
             matrix.postConcat(containerMatrix)
-            layerView.drawItself(canvas, matrix)
+
+            val context = Context(isMoving)
+            layerView.drawItself(canvas, matrix, context)
         }
 
         fun contains(point: XYPoint): Boolean {
@@ -229,12 +238,14 @@ class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context,
             return rectRes.contains(pointsArray[0], pointsArray[1])
         }
     }
+
+    class Context(val isMoving: Boolean)
 }
 
 class XYPoint(val x: Float, val y: Float)
 
 interface LayerView {
-    fun drawItself(canvas: Canvas, matrix: Matrix)
+    fun drawItself(canvas: Canvas, matrix: Matrix, context: LayeredScalableView.Context)
     val width: Float
     val height: Float
 }

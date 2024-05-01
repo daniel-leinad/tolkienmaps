@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import my.danielleinad.layeredscalableview.LayerView
+import my.danielleinad.layeredscalableview.LayeredScalableView
 import my.danielleinad.tolkienmaps.databinding.FragmentMiddleEarthMapBinding
 import my.danielleinad.tolkienmaps.resources.CachedXmlResourceParser
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
@@ -168,12 +169,17 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
 }
 
 class OptimizedBitmapLayerView(private val original: Bitmap, private val lowerRes: Bitmap, private val lowestRes: Bitmap) : LayerView {
-    override fun drawItself(canvas: Canvas, matrix: Matrix) {
+    override fun drawItself(canvas: Canvas, matrix: Matrix, context: LayeredScalableView.Context) {
         val f = FloatArray(9)
         matrix.getValues(f)
         val scaleX = f[Matrix.MSCALE_X]
 
-        val correctingFactor = 1.5 // TODO why do we need to introduce it
+        val correctingFactor = if (context.isMoving) {
+            0.3
+        } else {
+            // TODO why do we need this factor in this case
+            1.5
+        }
         val resultingWidth = original.width * scaleX * correctingFactor
 
         if (resultingWidth < lowestRes.width) {
@@ -205,7 +211,7 @@ class RectangleLayerView(
     private val paint: Paint
 ) : LayerView {
 
-    override fun drawItself(canvas: Canvas, matrix: Matrix) {
+    override fun drawItself(canvas: Canvas, matrix: Matrix, context: LayeredScalableView.Context) {
         val points = floatArrayOf(0F, 0F, width, 0F, 0F, height, width, height)
         matrix.mapPoints(points)
         if (fill) {
