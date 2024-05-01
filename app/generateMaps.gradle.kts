@@ -44,7 +44,7 @@ project.tasks.register("generateMaps") {
 
             // generate lowerRes
             val sourceImage = ImageIO.read(File(it.path))
-            val factor1 = minOf(sourceImage.width, sourceImage.height).toFloat() / 500F // TODO factor could be < 1, handle this case
+            val factor1 = minOf(sourceImage.width, sourceImage.height).toFloat() / 750F // TODO factor could be < 1, handle this case
             println("lower res factor = $factor1")
             val previewWidth1 = sourceImage.width / factor1
             val previewHeight1 = sourceImage.height / factor1
@@ -53,7 +53,7 @@ project.tasks.register("generateMaps") {
             ImageIO.write(previewImage1, it.extension, File(previewImagePath1.toString()))
 
             // generate lowestRes
-            val factor2 = minOf(sourceImage.width, sourceImage.height).toFloat() / 50F // TODO factor could be < 1, handle this case
+            val factor2 = minOf(sourceImage.width, sourceImage.height).toFloat() / 250F // TODO factor could be < 1, handle this case
             println("lowest res factor = $factor2")
             val previewWidth = sourceImage.width / factor2
             val previewHeight = sourceImage.height / factor2

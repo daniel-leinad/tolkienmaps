@@ -175,7 +175,7 @@ class OptimizedBitmapLayerView(private val original: Bitmap, private val lowerRe
         val scaleX = f[Matrix.MSCALE_X]
 
         val correctingFactor = if (context.isMoving) {
-            0.3
+            0.5
         } else {
             // TODO why do we need this factor in this case
             1.5
