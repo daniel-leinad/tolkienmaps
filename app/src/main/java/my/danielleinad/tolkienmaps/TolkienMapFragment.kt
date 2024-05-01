@@ -1,24 +1,29 @@
 package my.danielleinad.tolkienmaps
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Color
+import android.graphics.Path
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import my.danielleinad.layeredscalableview.LayerView
 import my.danielleinad.tolkienmaps.databinding.FragmentMiddleEarthMapBinding
 import my.danielleinad.tolkienmaps.resources.CachedXmlResourceParser
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
 import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
+import my.danielleinad.layeredscalableview.LayeredScalableView.LayerDescription
 
 open class TolkienMapFragment(private val mapId: String) : Fragment() {
     private lateinit var binding: FragmentMiddleEarthMapBinding
     private var areNonMainLayersShown: Boolean = false
-    private val nonMainLayers: MutableList<NonMainLayer> = mutableListOf()
-    private lateinit var mainBitmap: ImageScaleView.BitMapLayer
+    private val overlaidTolkienMaps: MutableList<OverlaidTolkienMap> = mutableListOf()
+    private lateinit var mainBitmap: BitMapLayerView
     private val containerPaint: Paint = Paint()
     private val borderPaint = Paint()
     init {
@@ -29,23 +34,15 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         borderPaint.strokeWidth = 5F
     }
 
-    private class NonMainLayer(val map: ImageScaleView.LayerDescription, val container: ImageScaleView.LayerDescription, val borders: ImageScaleView.LayerDescription) {
-        var isMapShown: Boolean = false
-            set(value) {
-                field = value
-                map.activated = value
-            }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
 
-        constructNonMainLayers()
+        constructOverlaidTolkienMaps()
 
         binding.imageView.layers.add(binding.imageView.LayerDescription(mainBitmap, Matrix()))
-        for (layer in nonMainLayers) {
+        for (layer in overlaidTolkienMaps) {
             binding.imageView.layers.add(layer.map)
             binding.imageView.layers.add(layer.container)
             binding.imageView.layers.add(layer.borders)
@@ -53,10 +50,10 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
 
         binding.showHideLayers.setOnClickListener {
             areNonMainLayersShown = !areNonMainLayersShown
-            hideShowLayers()
+            hideShowOverlays()
         }
 
-        hideShowLayers()
+        hideShowOverlays()
     }
 
     override fun onCreateView(
@@ -67,7 +64,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         return binding.root
     }
 
-    private fun constructNonMainLayers() {
+    private fun constructOverlaidTolkienMaps() {
         val tolkienMaps = CachedXmlResourceParser.getTolkienMaps(resources)
         val tolkienMapsUIStructure = CachedXmlResourceParser.getTolkienMapsUIStructure(resources)
         val mainMap = tolkienMaps.maps[mapId]?: throw Exception("Unknown map: $mapId")
@@ -75,7 +72,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         val mainMapRepresentation = tolkienMapsUIStructure.representations[mapId]
             ?: throw Exception("Representation not found for map $mapId")
 
-        mainBitmap = binding.imageView.BitMapLayer(mainMapRepresentation.bitmap, mainMapRepresentation.preview)
+        mainBitmap = BitMapLayerView(mainMapRepresentation.bitmap, mainMapRepresentation.preview)
 
         val initialMatrix = Matrix()
         appendMapLayersRecursively(mainMap, initialMatrix, tolkienMapsUIStructure)
@@ -98,7 +95,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
             val otherMapRepresentation = tolkienMapsUIStructure.representations[otherMapId]?: throw Exception("Representation not found for")
 
             val mapLayer = imageView.LayerDescription(
-                imageView.BitMapLayer(
+                BitMapLayerView(
                     otherMapRepresentation.bitmap,
                     otherMapRepresentation.preview
                 ), matrix
@@ -113,9 +110,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
                 }
             }
 
-            val container = imageView.RectangleLayer(
-                0F,
-                0F,
+            val container = RectangleLayerView(
                 otherMapRepresentation.bitmap.width.toFloat(),
                 otherMapRepresentation.bitmap.height.toFloat(),
                 true,
@@ -123,9 +118,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
             )
             val containerLayer = imageView.LayerDescription(container, Matrix(matrix))
 
-            val borders = imageView.RectangleLayer(
-                0F,
-                0F,
+            val borders = RectangleLayerView(
                 otherMapRepresentation.bitmap.width.toFloat(),
                 otherMapRepresentation.bitmap.height.toFloat(),
                 false,
@@ -134,26 +127,83 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
 
             val borderLayer = imageView.LayerDescription(borders, Matrix(matrix))
 
-            val layer = NonMainLayer(mapLayer, containerLayer, borderLayer)
+            val layer = OverlaidTolkienMap(mapLayer, containerLayer, borderLayer)
 
             containerLayer.onSingleTapConfirmedListener = {
                 layer.isMapShown = !layer.isMapShown
                 true
             }
 
-            nonMainLayers.add(layer)
+            overlaidTolkienMaps.add(layer)
 
             appendMapLayersRecursively(position.map, matrix, tolkienMapsUIStructure)
         }
     }
 
-    private fun hideShowLayers() {
-        for (layerDescription in nonMainLayers) {
+    private fun hideShowOverlays() {
+        for (layerDescription in overlaidTolkienMaps) {
             layerDescription.map.activated = areNonMainLayersShown && layerDescription.isMapShown
             layerDescription.container.activated = areNonMainLayersShown
             layerDescription.borders.activated = areNonMainLayersShown
         }
 
         binding.imageView.invalidate()
+    }
+
+    private class OverlaidTolkienMap(val map: LayerDescription, val container: LayerDescription, val borders: LayerDescription) {
+        var isMapShown: Boolean = false
+            set(value) {
+                field = value
+                map.activated = value
+            }
+    }
+}
+
+class BitMapLayerView(val bitmap: Bitmap, val previewBitmap: Bitmap) : LayerView {
+    override fun drawItself(canvas: Canvas, matrix: Matrix) {
+        val f = FloatArray(9)
+        matrix.getValues(f)
+        val scaleX = f[Matrix.MSCALE_X]
+        val previewScale = bitmap.width.toFloat() / previewBitmap.width.toFloat()
+        if (scaleX < 1) {
+            val resMatrix = Matrix()
+            resMatrix.postScale(previewScale, previewScale)
+            resMatrix.postConcat(matrix)
+            canvas.drawBitmap(previewBitmap, resMatrix, null)
+        } else {
+            canvas.drawBitmap(bitmap, matrix, null)
+        }
+    }
+
+    override val width: Float = bitmap.width.toFloat()
+    override val height: Float = bitmap.height.toFloat()
+}
+
+class RectangleLayerView(
+    override val width: Float,
+    override val height: Float,
+    val fill: Boolean,
+    val paint: Paint
+) : LayerView {
+
+    override fun drawItself(canvas: Canvas, matrix: Matrix) {
+        val points = floatArrayOf(0F, 0F, width, 0F, 0F, height, width, height)
+        matrix.mapPoints(points)
+        if (fill) {
+            val path = Path()
+            path.fillType = Path.FillType.EVEN_ODD
+            path.moveTo(points[0], points[1])
+            path.lineTo(points[2], points[3])
+            path.lineTo(points[6], points[7])
+            path.lineTo(points[4], points[5])
+            path.close()
+
+            canvas.drawPath(path, paint)
+        } else {
+            canvas.drawLine(points[0], points[1], points[2], points[3], paint)
+            canvas.drawLine(points[2], points[3], points[6], points[7], paint)
+            canvas.drawLine(points[4], points[5], points[6], points[7], paint)
+            canvas.drawLine(points[0], points[1], points[4], points[5], paint)
+        }
     }
 }

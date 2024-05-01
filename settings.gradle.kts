@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Tolkien Maps"
 include(":app")
- 
+include(":layeredScalableView")

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".ThrorMap">
 
-    <my.danielleinad.tolkienmaps.ImageScaleView
+    <my.danielleinad.layeredscalableview.LayeredScalableView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

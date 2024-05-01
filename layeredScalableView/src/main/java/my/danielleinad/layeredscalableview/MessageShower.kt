@@ -1,4 +1,4 @@
-package my.danielleinad.tolkienmaps
+package my.danielleinad.layeredscalableview
 
 import android.util.Log
 

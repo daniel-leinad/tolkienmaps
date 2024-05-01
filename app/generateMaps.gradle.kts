@@ -3,6 +3,8 @@ import java.io.File
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
 
+//TODO cache task
+
 fun resizeImage(originalImage: BufferedImage, targetWidth: Int, targetHeight: Int): BufferedImage {
     val resultingImage: Image =
         originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT)
