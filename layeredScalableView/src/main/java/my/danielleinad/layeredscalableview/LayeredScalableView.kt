@@ -55,7 +55,6 @@ class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context,
                 MotionEvent.ACTION_DOWN -> {
                     val currentPoint = XYPoint(event.x, event.y)
                     cachedPoints = mutableListOf(currentPoint)
-                    MessageShower.show("Action down!")
 
                     for (i in layers.size-1 downTo 0) {
                         val layer = layers[i]
@@ -70,7 +69,6 @@ class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context,
                         if (res) break
                     }
                 }
-                MotionEvent.ACTION_POINTER_DOWN -> MessageShower.show("pointer down!")
                 MotionEvent.ACTION_MOVE -> {
                     val pointerCount = event.pointerCount
                     val numberOfRelevantPoints = min(pointerCount, 2)
@@ -111,7 +109,6 @@ class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context,
     private val scaleGestureDetector =
         ScaleGestureDetector(context, object : ScaleGestureDetector.OnScaleGestureListener {
             override fun onScale(scaleGestureDetector: ScaleGestureDetector): Boolean {
-                MessageShower.show("on scale!")
                 val scaleFactor = scaleGestureDetector.scaleFactor
                 val x = scaleGestureDetector.focusX
                 val y = scaleGestureDetector.focusY
@@ -123,12 +120,10 @@ class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context,
             }
 
             override fun onScaleBegin(scaleGestureDetector: ScaleGestureDetector): Boolean {
-                MessageShower.show("scale begins!")
                 return true
             }
 
             override fun onScaleEnd(scaleGestureDetector: ScaleGestureDetector) {
-                MessageShower.show("done with scale!")
             }
 
         })

@@ -1,5 +1,6 @@
 package my.danielleinad.tolkienmaps
 
+import android.util.Log
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
@@ -18,6 +19,8 @@ import my.danielleinad.tolkienmaps.resources.CachedXmlResourceParser
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
 import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
 import my.danielleinad.layeredscalableview.LayeredScalableView.LayerDescription
+
+const val TAG = "TolkienMapFragment"
 
 open class TolkienMapFragment(private val mapId: String) : Fragment() {
     private lateinit var binding: FragmentMiddleEarthMapBinding
@@ -102,7 +105,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
             )
             val action = tolkienMapsUIStructure.actions[Pair(mapId, otherMapId)]
             if (action == null) {
-                MessageShower.warn("Action not found for map $otherMapId")
+                Log.w(TAG, "Action not found for map $otherMapId")
             } else {
                 mapLayer.onDoubleTapListener = {
                     findNavController().navigate(action)
