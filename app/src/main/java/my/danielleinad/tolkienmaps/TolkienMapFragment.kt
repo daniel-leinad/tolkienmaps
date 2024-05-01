@@ -159,7 +159,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     }
 }
 
-class BitMapLayerView(val bitmap: Bitmap, val previewBitmap: Bitmap) : LayerView {
+class BitMapLayerView(private val bitmap: Bitmap, private val previewBitmap: Bitmap) : LayerView {
     override fun drawItself(canvas: Canvas, matrix: Matrix) {
         val f = FloatArray(9)
         matrix.getValues(f)
@@ -182,8 +182,8 @@ class BitMapLayerView(val bitmap: Bitmap, val previewBitmap: Bitmap) : LayerView
 class RectangleLayerView(
     override val width: Float,
     override val height: Float,
-    val fill: Boolean,
-    val paint: Paint
+    private val fill: Boolean,
+    private val paint: Paint
 ) : LayerView {
 
     override fun drawItself(canvas: Canvas, matrix: Matrix) {

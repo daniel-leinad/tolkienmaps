@@ -75,7 +75,7 @@ private class TolkienMapsXml(xmlParser: XmlResourceParser) {
                 var scale: Float? = null
                 var translateX: Float? = null
                 var translateY: Float? = null
-                var rotate: Float = 0F // default value
+                var rotate = 0F // default value
                 for (i in 0 until xmlParser.attributeCount) {
                     when (xmlParser.getAttributeName(i)) {
                         "id" -> { id = xmlParser.getAttributeValue(i) }

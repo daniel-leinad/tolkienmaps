@@ -1,11 +1,8 @@
 package my.danielleinad.layeredscalableview
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
-import android.graphics.Paint
-import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.GestureDetector
@@ -204,7 +201,7 @@ class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context,
     }
 
     // TODO does this make sense as an inner class?
-    inner class LayerDescription(val layerView: LayerView, val initialMatrix: Matrix) {
+    inner class LayerDescription(val layerView: LayerView, private val initialMatrix: Matrix) {
         var activated: Boolean = true
         var onSingleTapConfirmedListener: (() -> Boolean)? = null // return true to consume the click
         var onSingleTapListener: (() -> Boolean)? = null // return true to consume the click
@@ -229,7 +226,7 @@ class LayeredScalableView(context: Context, attrs: AttributeSet) : View(context,
             matrix.postConcat(containerMatrix)
             val invertedMatrix = Matrix()
             assert(matrix.invert(invertedMatrix))
-            var pointsArray = floatArrayOf(point.x, point.y)
+            val pointsArray = floatArrayOf(point.x, point.y)
             invertedMatrix.mapPoints(pointsArray)
 
             val rectRes = RectF(0F, 0F, layerView.width, layerView.height)

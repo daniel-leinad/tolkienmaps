@@ -8,7 +8,6 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        // TODO there should be a better way to debug app separately
         applicationId = "my.danielleinad.tolkienmaps"
         minSdk = 24
         targetSdk = 34
