@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import my.danielleinad.layeredscalableview.LayerView
 import my.danielleinad.layeredscalableview.LayeredScalableView
-import my.danielleinad.tolkienmaps.databinding.FragmentMiddleEarthMapBinding
+import my.danielleinad.tolkienmaps.databinding.FragmentTolkienMapBinding
 import my.danielleinad.tolkienmaps.resources.CachedXmlResourceParser
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
 import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
@@ -29,7 +29,7 @@ import kotlin.math.absoluteValue
 const val TAG = "TolkienMapFragment"
 
 open class TolkienMapFragment(private val mapId: String) : Fragment() {
-    private lateinit var binding: FragmentMiddleEarthMapBinding //TODO this is wrong
+    private lateinit var binding: FragmentTolkienMapBinding
     private var areNonMainLayersShown: Boolean = false
     private val overlaidTolkienMaps: MutableList<OverlaidTolkienMap> = mutableListOf()
     private lateinit var mainLayer: LayerDescription
@@ -51,7 +51,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
+        binding = FragmentTolkienMapBinding.inflate(layoutInflater)
         val loaderString = resources.getString(R.string.loading)
         // TODO I don't like the fact that loading screen is implemented as a layer in LayeredScalableView
         loaderLayer = binding.imageView.LayerDescription(CenteredTextLayerView(loaderString), Matrix())
