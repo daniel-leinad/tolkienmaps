@@ -59,8 +59,7 @@
     <fragment
         android:id="@+id/middleEarthMap"
         android:name="my.danielleinad.tolkienmaps.MiddleEarthMap"
-        android:label="fragment_middle_earth_map"
-        tools:layout="@layout/fragment_tolkien_map" >
+        android:label="fragment_middle_earth_map" >
         <action
             android:id="@+id/action_middleEarthMap_to_wilderlandMap"
             app:destination="@id/wilderlandMap" />
