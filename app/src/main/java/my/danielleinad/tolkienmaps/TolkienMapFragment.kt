@@ -38,6 +38,8 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     private var tolkienMapsAreRendered = false
     private lateinit var loaderLayer: LayerDescription
 
+    private lateinit var thisTolkienMap: TolkienMaps.TolkienMap
+
     init {
         containerPaint.color = Color.argb(20, 0, 50, 250)
         containerPaint.strokeWidth = 5F
@@ -52,6 +54,11 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
         val loaderString = resources.getString(R.string.loading)
         loaderLayer = binding.imageView.LayerDescription(CenteredTextLayerView(loaderString), Matrix())
+        val tolkienMaps = CachedXmlResourceParser.getTolkienMaps(resources)
+        thisTolkienMap = tolkienMaps.maps[mapId]?: throw Exception("Unknown map: $mapId")
+        if (thisTolkienMap.positions.size == 0) {
+            binding.showHideOverlaidMaps.visibility = View.INVISIBLE
+        }
     }
 
     override fun onCreateView(
@@ -82,21 +89,19 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         }
         binding.imageView.alignCenterLayer(mainLayer)
 
-        binding.showHideLayers.setOnClickListener {
+        binding.showHideOverlaidMaps.setOnClickListener {
             areNonMainLayersShown = !areNonMainLayersShown
-            hideShowOverlays()
+            hideShowOverlaidMaps()
         }
 
-        hideShowOverlays()
+        hideShowOverlaidMaps()
 
         tolkienMapsAreRendered = true
         loaderLayer.activated = false
     }
 
     private fun constructOverlaidTolkienMaps() {
-        val tolkienMaps = CachedXmlResourceParser.getTolkienMaps(resources)
         val tolkienMapsUIStructure = CachedXmlResourceParser.getTolkienMapsUIStructure(resources)
-        val mainMap = tolkienMaps.maps[mapId]?: throw Exception("Unknown map: $mapId")
 
         val mainMapRepresentation = tolkienMapsUIStructure.representations[mapId]
             ?: throw Exception("Representation not found for map $mapId")
@@ -111,7 +116,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         )
 
         val initialMatrix = Matrix()
-        appendMapLayersRecursively(mainMap, initialMatrix, tolkienMapsUIStructure)
+        appendMapLayersRecursively(thisTolkienMap, initialMatrix, tolkienMapsUIStructure)
     }
 
     private fun appendMapLayersRecursively(
@@ -177,7 +182,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         }
     }
 
-    private fun hideShowOverlays() {
+    private fun hideShowOverlaidMaps() {
         for (layerDescription in overlaidTolkienMaps) {
             layerDescription.map.activated = areNonMainLayersShown && layerDescription.isMapShown
             layerDescription.container.activated = areNonMainLayersShown
