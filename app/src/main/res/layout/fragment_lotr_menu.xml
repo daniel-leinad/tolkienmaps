@@ -7,22 +7,31 @@
     android:orientation="vertical"
     tools:context=".LotrMenu">
 
-    <Button
-        android:id="@+id/middle_earth_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/middle_earth" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
+        <Button
+            android:id="@+id/middle_earth_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:text="@string/middle_earth" />
+    </FrameLayout>
 
-    <Button
-        android:id="@+id/shire_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/shire" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
+        <Button
+            android:id="@+id/shire_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:text="@string/shire" />
+    </FrameLayout>
 
-    <Button
-        android:id="@+id/rohan_gondor_mordor_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/rohan_gondor_mordor" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
+        <Button
+            android:id="@+id/rohan_gondor_mordor_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:text="@string/rohan_gondor_mordor" />
+    </FrameLayout>
 
 </LinearLayout>

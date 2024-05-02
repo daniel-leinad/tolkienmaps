@@ -7,16 +7,22 @@
     android:orientation="vertical"
     tools:context=".HobbitMenu">
 
-    <Button
-        android:id="@+id/wilderland_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/wilderland" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
+        <Button
+            android:id="@+id/wilderland_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:text="@string/wilderland" />
+    </FrameLayout>
 
-    <Button
-        android:id="@+id/thror_map_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/thror_map" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
+        <Button
+            android:id="@+id/thror_map_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:text="@string/thror_map" />
+    </FrameLayout>
 
 </LinearLayout>

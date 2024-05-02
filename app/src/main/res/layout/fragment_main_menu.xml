@@ -15,8 +15,6 @@
         <Button
             android:id="@+id/main_map_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
             android:text="@string/main_map" />
     </FrameLayout>
 
@@ -27,8 +25,6 @@
         <Button
             android:id="@+id/lotr_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
             android:text="@string/lord_of_the_rings" />
 
     </FrameLayout>
@@ -40,8 +36,6 @@
         <Button
             android:id="@+id/hobbit_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
             android:text="@string/hobbit" />
 
     </FrameLayout>
@@ -53,8 +47,6 @@
         <Button
             android:id="@+id/about_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
             android:text="@string/about" />
     </FrameLayout>
 
