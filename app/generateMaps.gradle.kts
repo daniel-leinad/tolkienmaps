@@ -42,6 +42,8 @@ project.tasks.register("generateMaps") {
             val path = destDir.file(destName)
             it.copyTo(File(path.toString()), true)
 
+            //TODO DRY violation
+
             // generate lowerRes
             val sourceImage = ImageIO.read(File(it.path))
             val factor1 = minOf(sourceImage.width, sourceImage.height).toFloat() / 750F // TODO factor could be < 1, handle this case
