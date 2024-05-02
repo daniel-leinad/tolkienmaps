@@ -5,4 +5,5 @@
     <map id="shire" compass="@drawable/compass_shire"/>
     <map id="thror" compass="@drawable/compass_thror"/>
     <map id="wilderland" compass="@drawable/compass_wilderland"/>
+    <map id="beleriand" compass="@drawable/compass_middle_earth"/>
 </root>

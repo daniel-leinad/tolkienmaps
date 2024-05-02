@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_mainMenu_to_middleEarthMap"
             app:destination="@id/middleEarthMap" />
+        <action
+            android:id="@+id/action_mainMenu_to_beleriandMap"
+            app:destination="@id/beleriandMap" />
     </fragment>
     <fragment
         android:id="@+id/hobbitMenu"
@@ -59,8 +62,7 @@
     <fragment
         android:id="@+id/middleEarthMap"
         android:name="my.danielleinad.tolkienmaps.MiddleEarthMap"
-        android:label="fragment_middle_earth_map"
-        tools:layout="@layout/fragment_tolkien_map" >
+        android:label="fragment_middle_earth_map" >
         <action
             android:id="@+id/action_middleEarthMap_to_wilderlandMap"
             app:destination="@id/wilderlandMap" />
@@ -94,4 +96,12 @@
         android:id="@+id/throrMap"
         android:name="my.danielleinad.tolkienmaps.ThrorMap"
         android:label="fragment_thror_map" />
+    <fragment
+        android:id="@+id/beleriandMap"
+        android:name="my.danielleinad.tolkienmaps.BeleriandMap"
+        android:label="BeleriandMap" >
+        <action
+            android:id="@+id/action_beleriandMap_to_middleEarthMap"
+            app:destination="@id/middleEarthMap" />
+    </fragment>
 </navigation>

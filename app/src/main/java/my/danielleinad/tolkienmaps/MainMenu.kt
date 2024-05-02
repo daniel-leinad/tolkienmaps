@@ -40,6 +40,10 @@ class MainMenu : Fragment() {
         binding.lotrButton.setOnClickListener {
             findNavController().navigate(R.id.action_mainMenu_to_lotrMenu)
         }
+
+        binding.beleriandButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mainMenu_to_beleriandMap)
+        }
     }
 
 }
