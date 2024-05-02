@@ -11,4 +11,4 @@ local.properties
 app/src/main/res/drawable/generated_*
 *.trace
 /app/image_source/*.xcf
-junk
+garbage
