@@ -9,7 +9,8 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="60dp">
+        android:layout_height="85dp"
+        android:clipChildren="false">
 
         <Button
             android:id="@+id/main_map_button"
@@ -41,7 +42,7 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="60dp">
+        android:layout_height="85dp">
 
         <Button
             android:id="@+id/about_button"
