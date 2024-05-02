@@ -12,7 +12,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import my.danielleinad.layeredscalableview.LayerView
 import my.danielleinad.layeredscalableview.LayeredScalableView
 import my.danielleinad.tolkienmaps.databinding.FragmentMiddleEarthMapBinding
@@ -31,6 +35,8 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     private lateinit var mainBitmap: OptimizedBitmapLayerView
     private val containerPaint: Paint = Paint()
     private val borderPaint = Paint()
+    private var tolkienMapsAreRendered = false
+
     init {
         containerPaint.color = Color.argb(20, 0, 50, 250)
         containerPaint.strokeWidth = 5F
@@ -43,7 +49,24 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         super.onCreate(savedInstanceState)
 
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
+    }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (!tolkienMapsAreRendered) {
+            AsyncRenderer.render(this)
+        }
+    }
+
+    private fun renderTolkienMaps() {
         constructOverlaidTolkienMaps()
 
         binding.imageView.layers.add(binding.imageView.LayerDescription(mainBitmap, Matrix()))
@@ -59,14 +82,8 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         }
 
         hideShowOverlays()
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        return binding.root
+        tolkienMapsAreRendered = true
     }
 
     private fun constructOverlaidTolkienMaps() {
@@ -166,6 +183,14 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
                 field = value
                 map.activated = value
             }
+    }
+
+    object AsyncRenderer : ViewModel() {
+        fun render(tolkienMapFragment: TolkienMapFragment) {
+            viewModelScope.launch(Dispatchers.Default) {
+                tolkienMapFragment.renderTolkienMaps()
+            }
+        }
     }
 }
 
