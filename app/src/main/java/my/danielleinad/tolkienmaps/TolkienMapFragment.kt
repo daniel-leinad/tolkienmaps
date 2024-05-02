@@ -60,6 +60,9 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         if (thisTolkienMap.positions.size == 0) {
             binding.showHideOverlaidMaps.visibility = View.INVISIBLE
         }
+        val compass = CachedXmlResourceParser.getCompasses(resources)[mapId]
+            ?: throw Exception("Compass not found for $mapId")
+        binding.compassView.setImageResource(compass)
     }
 
     override fun onCreateView(

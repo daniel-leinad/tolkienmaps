@@ -25,16 +25,24 @@ project.tasks.register("checkTolkienMapsResourceConsistency") {
         val tolkienMapsUIStructure: Document = builder.parse(resourceDir.file("tolkien_maps_ui_structure.xml").asFile)
         tolkienMapsUIStructure.documentElement.normalize()
 
+        val compasses: Document = builder.parse(resourceDir.file("compasses.xml").asFile)
+        compasses.documentElement.normalize()
+
         val requiredMaps: MutableList<String> = mutableListOf()
-        val mapsToCheck: MutableSet<String> = mutableSetOf()
+        val mapsUiStructure: MutableSet<String> = mutableSetOf()
+        val mapsCompasses: MutableSet<String> = mutableSetOf()
 
         addMapsToCollection(tolkienMaps, requiredMaps)
-        addMapsToCollection(tolkienMapsUIStructure, mapsToCheck)
+        addMapsToCollection(tolkienMapsUIStructure, mapsUiStructure)
+        addMapsToCollection(compasses, mapsCompasses)
 
         val errors: MutableList<String> = mutableListOf()
         for (requiredMap in requiredMaps) {
-            if (!mapsToCheck.contains(requiredMap)) {
+            if (!mapsUiStructure.contains(requiredMap)) {
                 errors.add("Map $requiredMap not found in tolkien_maps_ui_structure.xml")
+            }
+            if (!mapsCompasses.contains(requiredMap)) {
+                errors.add("Map $requiredMap not found in compasses.xml")
             }
         }
 

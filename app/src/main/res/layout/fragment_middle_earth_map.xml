@@ -16,8 +16,7 @@
         android:id="@+id/compassView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="right"
-        android:src="@drawable/compass_middle_earth" />
+        android:layout_gravity="right" />
 
     <FrameLayout
         android:layout_width="75dp"

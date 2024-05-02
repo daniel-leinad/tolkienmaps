@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <map id="middle_earth" compass="@drawable/compass_middle_earth"/>
+    <map id="rohan_gondor_mordor" compass="@drawable/compass_rohan"/>
+    <map id="shire" compass="@drawable/compass_shire"/>
+    <map id="thror" compass="@drawable/compass_thror"/>
+    <map id="wilderland" compass="@drawable/compass_wilderland"/>
+</root>
