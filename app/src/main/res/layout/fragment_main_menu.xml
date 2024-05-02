@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,28 +8,54 @@
     android:orientation="vertical"
     tools:context=".MainMenu">
 
-    <Button
-        android:id="@+id/main_map_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/main_map" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
 
-    <Button
-        android:id="@+id/hobbit_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/hobbit" />
+        <Button
+            android:id="@+id/main_map_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="@string/main_map" />
+    </FrameLayout>
 
-    <Button
-        android:id="@+id/lotr_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lord_of_the_rings" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
 
-    <Button
-        android:id="@+id/about_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/about" />
+        <Button
+            android:id="@+id/lotr_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="@string/lord_of_the_rings" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
+
+        <Button
+            android:id="@+id/hobbit_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="@string/hobbit" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
+
+        <Button
+            android:id="@+id/about_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="@string/about" />
+    </FrameLayout>
 
 </LinearLayout>
