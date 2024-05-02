@@ -10,14 +10,68 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import kotlin.math.min
 
+
 class LayeredScalableView(context: android.content.Context, attrs: AttributeSet) : View(context, attrs) {
     val layers: MutableList<LayerDescription> = mutableListOf()
 
     private var containerMatrix = Matrix()
-    private var cachedPoints: MutableList<XYPoint> = mutableListOf()
-    private var needInvalidation = false
 
+    private var needInvalidation = false
     private var isMoving = false
+
+    private var cachedPoints: MutableList<XYPoint> = mutableListOf()
+
+    private object synchronizedLayoutAccess {
+        private var layoutData: LayoutData? = null
+        private val layoutMonitor = Object()
+
+        fun updateLayout(newLayout: LayoutData) {
+            synchronized(layoutMonitor) {
+                layoutData = newLayout
+                layoutMonitor.notifyAll()
+            }
+        }
+        fun waitForLayout(): LayoutData {
+            val layout: LayoutData
+            synchronized(layoutMonitor) {
+                var localLayout = layoutData
+                while (localLayout == null) {
+                    layoutMonitor.wait()
+                    localLayout = layoutData
+                }
+                layout = localLayout
+            }
+            return layout
+        }
+    }
+
+    private data class LayoutData(
+        val left: Int,
+        val top: Int,
+        val right: Int,
+        val bottom: Int
+    )
+
+    fun alignCenter() {
+        val layout = synchronizedLayoutAccess.waitForLayout()
+
+        if (layers.size == 0) return
+
+        // TODO does this belong here?
+        val width = (layout.right - layout.left).toFloat()
+        val height = (layout.bottom - layout.top).toFloat()
+        val imageSource1 = layers[0]
+        val imageWidth: Float = imageSource1.layerView.width
+        val imageHeight: Float = imageSource1.layerView.height
+        val scaleFactor = min(width / imageWidth, height / imageHeight)
+        containerMatrix.postScale(scaleFactor, scaleFactor)
+
+        // centering
+        val topOffset = ((layout.bottom - layout.top) / 2) - ((imageSource1.layerView.height * scaleFactor) / 2)
+        val leftOffset = ((layout.right - layout.left) / 2) - ((imageSource1.layerView.width * scaleFactor) / 2)
+
+        containerMatrix.postTranslate(leftOffset, topOffset)
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -28,24 +82,7 @@ class LayeredScalableView(context: android.content.Context, attrs: AttributeSet)
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-
-        if (layers.size == 0) return
-
-        // TODO does this belong here?
-        val width = (right - left).toFloat()
-        val height = (bottom - top).toFloat()
-        val imageSource1 = layers[0]
-        val imageWidth: Float = imageSource1.layerView.width
-        val imageHeight: Float = imageSource1.layerView.height
-        val scaleFactor = min(width / imageWidth, height / imageHeight)
-        containerMatrix.postScale(scaleFactor, scaleFactor)
-
-        // centering
-        val topOffset = ((bottom - top) / 2) - ((imageSource1.layerView.height * scaleFactor) / 2)
-        val leftOffset = ((right - left) / 2) - ((imageSource1.layerView.width * scaleFactor) / 2)
-
-        containerMatrix.postTranslate(leftOffset, topOffset)
-
+        synchronizedLayoutAccess.updateLayout(LayoutData(left, top, right, bottom))
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {

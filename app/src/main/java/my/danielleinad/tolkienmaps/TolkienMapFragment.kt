@@ -61,7 +61,9 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (!tolkienMapsAreRendered) {
+        if (tolkienMapsAreRendered) {
+            binding.imageView.alignCenter()
+        } else {
             AsyncRenderer.render(this)
         }
     }
@@ -75,6 +77,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
             binding.imageView.layers.add(layer.container)
             binding.imageView.layers.add(layer.borders)
         }
+        binding.imageView.alignCenter()
 
         binding.showHideLayers.setOnClickListener {
             areNonMainLayersShown = !areNonMainLayersShown
