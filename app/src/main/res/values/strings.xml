@@ -11,4 +11,7 @@
     <string name="rohan_gondor_mordor">Rohan, Gondor and Mordor</string>
     <string name="about_info">created by Daniel Vedeneev\nfundan.fundan@gmail.com\n2023</string>
     <string name="loading">Loading…</string>
+    <string name="instruction_show_smaller_maps">Tap this icon to show smaller maps</string>
+    <string name="instruction_show_smaller_map">Single tap a smaller map to show it</string>
+    <string name="instruction_open_smaller_map">Double tap a smaller map to open it</string>
 </resources>
