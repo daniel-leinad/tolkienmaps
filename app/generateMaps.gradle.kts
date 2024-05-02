@@ -13,13 +13,18 @@ fun resizeImage(originalImage: BufferedImage, targetWidth: Int, targetHeight: In
     return outputImage
 }
 
-//fun generateImageScaledByAFactor(sourceImage: BufferedImage, factor: Float, tag: String) {
-//    val previewWidth = sourceImage.width / factor
-//    val previewHeight = sourceImage.height / factor
-//    val previewImage = resizeImage(sourceImage, previewWidth.toInt(), previewHeight.toInt())
-//    val previewImagePath = destDir.file("generated_${tag}_" + it.name)
-//    ImageIO.write(previewImage, it.extension, File(previewImagePath.toString()))
-//}
+fun generateImageScaledByAFactor(sourceImage: BufferedImage, factor: Float, originalFile: File, tag: String?, destDir: Directory) {
+    val resultingWidth = sourceImage.width / factor
+    val resultingHeight = sourceImage.height / factor
+    val resultingImage = resizeImage(sourceImage, resultingWidth.toInt(), resultingHeight.toInt())
+    val filenamePrefix = if (tag == null) { "generated_" } else { "generated_" + tag + "_" }
+    val resultingImagePath = destDir.file(filenamePrefix + originalFile.name)
+    ImageIO.write(resultingImage, originalFile.extension, File(resultingImagePath.toString()))
+}
+
+fun factorFromTargetSize(sourceImage: BufferedImage, targetSize: Float): Float {
+    return minOf(sourceImage.width, sourceImage.height).toFloat() / targetSize // TODO factor could be < 1, handle this case
+}
 
 project.tasks.register("generateMaps") {
     doFirst {
@@ -42,26 +47,15 @@ project.tasks.register("generateMaps") {
             val path = destDir.file(destName)
             it.copyTo(File(path.toString()), true)
 
-            //TODO DRY violation
+            val sourceImage = ImageIO.read(File(it.path))
 
             // generate lowerRes
-            val sourceImage = ImageIO.read(File(it.path))
-            val factor1 = minOf(sourceImage.width, sourceImage.height).toFloat() / 750F // TODO factor could be < 1, handle this case
-            println("lower res factor = $factor1")
-            val previewWidth1 = sourceImage.width / factor1
-            val previewHeight1 = sourceImage.height / factor1
-            val previewImage1 = resizeImage(sourceImage, previewWidth1.toInt(), previewHeight1.toInt())
-            val previewImagePath1 = destDir.file("generated_lower_res_" + it.name)
-            ImageIO.write(previewImage1, it.extension, File(previewImagePath1.toString()))
+            val lowerResFactor = factorFromTargetSize(sourceImage, 750F)
+            generateImageScaledByAFactor(sourceImage, lowerResFactor, it, "lower_res", destDir)
 
             // generate lowestRes
-            val factor2 = minOf(sourceImage.width, sourceImage.height).toFloat() / 250F // TODO factor could be < 1, handle this case
-            println("lowest res factor = $factor2")
-            val previewWidth = sourceImage.width / factor2
-            val previewHeight = sourceImage.height / factor2
-            val previewImage = resizeImage(sourceImage, previewWidth.toInt(), previewHeight.toInt())
-            val previewImagePath = destDir.file("generated_lowest_res_" + it.name)
-            ImageIO.write(previewImage, it.extension, File(previewImagePath.toString()))
+            val lowestResFactor = factorFromTargetSize(sourceImage, 250F)
+            generateImageScaledByAFactor(sourceImage, lowestResFactor, it, "lowest_res", destDir)
         }
     }
 }
