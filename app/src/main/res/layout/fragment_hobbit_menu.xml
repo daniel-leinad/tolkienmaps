@@ -9,7 +9,7 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="60dp">
+        android:layout_height="85dp">
         <Button
             android:id="@+id/wilderland_button"
             style="@style/Theme.TolkienMaps.Button"
@@ -18,7 +18,7 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="60dp">
+        android:layout_height="85dp">
         <Button
             android:id="@+id/thror_map_button"
             style="@style/Theme.TolkienMaps.Button"
