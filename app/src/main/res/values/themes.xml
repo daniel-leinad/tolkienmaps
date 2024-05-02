@@ -4,8 +4,10 @@
     <style name="Theme.TolkienMaps" parent="android:Theme.Material.Light.NoActionBar" />
     <style name="Theme.TolkienMaps.Button" parent="Theme.TolkienMaps">
         <item name="android:textColor">@color/black</item>
-        <item name="android:background">@drawable/button_bg</item>
+        <item name="android:background">@drawable/button_selector</item>
         <item name="android:fontFamily">@font/ringbearer</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 </resources>
