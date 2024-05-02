@@ -52,6 +52,7 @@ class LayeredScalableView(context: android.content.Context, attrs: AttributeSet)
         val bottom: Int
     )
 
+    // This function will block until the view is laid out (when layout()/onLayout() is called)
     fun alignCenter() {
         val layout = synchronizedLayoutAccess.waitForLayout()
 
