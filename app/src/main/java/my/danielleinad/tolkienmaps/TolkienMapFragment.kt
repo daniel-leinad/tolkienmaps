@@ -29,13 +29,14 @@ import kotlin.math.absoluteValue
 const val TAG = "TolkienMapFragment"
 
 open class TolkienMapFragment(private val mapId: String) : Fragment() {
-    private lateinit var binding: FragmentMiddleEarthMapBinding
+    private lateinit var binding: FragmentMiddleEarthMapBinding //TODO this is wrong
     private var areNonMainLayersShown: Boolean = false
     private val overlaidTolkienMaps: MutableList<OverlaidTolkienMap> = mutableListOf()
-    private lateinit var mainBitmap: OptimizedBitmapLayerView
+    private lateinit var mainLayer: LayerDescription
     private val containerPaint: Paint = Paint()
     private val borderPaint = Paint()
     private var tolkienMapsAreRendered = false
+    private lateinit var loaderLayer: LayerDescription
 
     init {
         containerPaint.color = Color.argb(20, 0, 50, 250)
@@ -49,6 +50,8 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         super.onCreate(savedInstanceState)
 
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
+        val loaderString = resources.getString(R.string.loading)
+        loaderLayer = binding.imageView.LayerDescription(CenteredTextLayerView(loaderString), Matrix())
     }
 
     override fun onCreateView(
@@ -61,9 +64,9 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (tolkienMapsAreRendered) {
-            binding.imageView.alignCenter()
-        } else {
+        if (!tolkienMapsAreRendered) {
+            binding.imageView.layers.add(loaderLayer)
+            binding.imageView.invalidate()
             AsyncRenderer.render(this)
         }
     }
@@ -71,13 +74,13 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     private fun renderTolkienMaps() {
         constructOverlaidTolkienMaps()
 
-        binding.imageView.layers.add(binding.imageView.LayerDescription(mainBitmap, Matrix()))
+        binding.imageView.layers.add(mainLayer)
         for (layer in overlaidTolkienMaps) {
             binding.imageView.layers.add(layer.map)
             binding.imageView.layers.add(layer.container)
             binding.imageView.layers.add(layer.borders)
         }
-        binding.imageView.alignCenter()
+        binding.imageView.alignCenterLayer(mainLayer)
 
         binding.showHideLayers.setOnClickListener {
             areNonMainLayersShown = !areNonMainLayersShown
@@ -87,6 +90,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         hideShowOverlays()
 
         tolkienMapsAreRendered = true
+        loaderLayer.activated = false
     }
 
     private fun constructOverlaidTolkienMaps() {
@@ -97,10 +101,13 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         val mainMapRepresentation = tolkienMapsUIStructure.representations[mapId]
             ?: throw Exception("Representation not found for map $mapId")
 
-        mainBitmap = OptimizedBitmapLayerView(
-            mainMapRepresentation.bitmap,
-            mainMapRepresentation.lowerRes,
-            mainMapRepresentation.lowestRes,
+        mainLayer = binding.imageView.LayerDescription(
+            OptimizedBitmapLayerView(
+                mainMapRepresentation.bitmap,
+                mainMapRepresentation.lowerRes,
+                mainMapRepresentation.lowestRes,
+            ),
+            Matrix()
         )
 
         val initialMatrix = Matrix()
@@ -262,4 +269,15 @@ class RectangleLayerView(
             canvas.drawLine(points[0], points[1], points[4], points[5], paint)
         }
     }
+}
+
+class CenteredTextLayerView(private val text: String) : LayerView {
+    override fun drawItself(canvas: Canvas, matrix: Matrix, context: LayeredScalableView.Context) {
+        val paint = Paint()
+        paint.textSize = 50F
+        canvas.drawText(text, (canvas.width.toFloat() / 2) - 100, (canvas.height.toFloat() / 2), paint)
+    }
+
+    override val width = 0F
+    override val height = 0F
 }

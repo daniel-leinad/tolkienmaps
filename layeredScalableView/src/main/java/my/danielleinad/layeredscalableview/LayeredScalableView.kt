@@ -52,24 +52,26 @@ class LayeredScalableView(context: android.content.Context, attrs: AttributeSet)
         val bottom: Int
     )
 
-    // This function will block until the view is laid out (when layout()/onLayout() is called)
-    fun alignCenter() {
+    // This function will block until the view has been laid out (when layout()/onLayout() is called)
+    fun alignCenterLayer(layer: LayerDescription) {
+        // TODO does this function belong here?
+
         val layout = synchronizedLayoutAccess.waitForLayout()
 
-        if (layers.size == 0) return
+        containerMatrix = Matrix()
+        val layerMatrix = layer.getMatrix()
+        assert(layerMatrix.invert(containerMatrix))
 
-        // TODO does this belong here?
         val width = (layout.right - layout.left).toFloat()
         val height = (layout.bottom - layout.top).toFloat()
-        val imageSource1 = layers[0]
-        val imageWidth: Float = imageSource1.layerView.width
-        val imageHeight: Float = imageSource1.layerView.height
+        val imageWidth: Float = layer.layerView.width
+        val imageHeight: Float = layer.layerView.height
         val scaleFactor = min(width / imageWidth, height / imageHeight)
         containerMatrix.postScale(scaleFactor, scaleFactor)
 
         // centering
-        val topOffset = ((layout.bottom - layout.top) / 2) - ((imageSource1.layerView.height * scaleFactor) / 2)
-        val leftOffset = ((layout.right - layout.left) / 2) - ((imageSource1.layerView.width * scaleFactor) / 2)
+        val topOffset = ((layout.bottom - layout.top) / 2) - ((layer.layerView.height * scaleFactor) / 2)
+        val leftOffset = ((layout.right - layout.left) / 2) - ((layer.layerView.width * scaleFactor) / 2)
 
         containerMatrix.postTranslate(leftOffset, topOffset)
     }
@@ -274,6 +276,10 @@ class LayeredScalableView(context: android.content.Context, attrs: AttributeSet)
             val rectRes = RectF(0F, 0F, layerView.width, layerView.height)
 
             return rectRes.contains(pointsArray[0], pointsArray[1])
+        }
+
+        fun getMatrix(): Matrix {
+            return Matrix(initialMatrix)
         }
     }
 
