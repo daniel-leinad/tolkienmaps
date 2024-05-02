@@ -53,6 +53,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
 
         binding = FragmentMiddleEarthMapBinding.inflate(layoutInflater)
         val loaderString = resources.getString(R.string.loading)
+        // TODO I don't like the fact that loading screen is implemented as a layer in LayeredScalableView
         loaderLayer = binding.imageView.LayerDescription(CenteredTextLayerView(loaderString), Matrix())
         val tolkienMaps = CachedXmlResourceParser.getTolkienMaps(resources)
         thisTolkienMap = tolkienMaps.maps[mapId]?: throw Exception("Unknown map: $mapId")
