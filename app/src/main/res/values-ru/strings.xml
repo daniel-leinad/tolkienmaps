@@ -14,4 +14,12 @@
     <string name="instruction_show_smaller_maps">Коснитесь этой иконки чтобы отобразить карты помельче</string>
     <string name="instruction_show_smaller_map">Коснитесь карты помельче чтобы показать её</string>
     <string name="instruction_open_smaller_map">Коснитесь карты помельче дважды чтобы перейти в неё</string>
+    <string name="show_hide_button_description">скрыть/показать карты помельче кнопка</string>
+    <string name="compass_description">Компас</string>
+    <string name="arda_first_age">Арда (первая эпоха)</string>
+    <string name="arda_second_age">Арда (вторая эпоха)</string>
+    <string name="numenor">Нуменор</string>
+    <string name="silmarillion">Сильмариллион</string>
+    <string name="atlas_of_middle_earth">Атлас Средиземья</string>
+    <string name="beleriand">Белерианд</string>
 </resources>
