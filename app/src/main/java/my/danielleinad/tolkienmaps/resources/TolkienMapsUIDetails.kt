@@ -14,11 +14,13 @@ fun parseTolkienMapsUIDetails(resources: Resources): TolkienMapsUIDetails {
 
     val navigations: MutableMap<TolkienMapId, MutableMap<TolkienMapId, Int>> = mutableMapOf()
     val representations: MutableMap<TolkienMapId, TolkienMapUIRepresentation> = mutableMapOf()
+    val compasses: MutableMap<TolkienMapId, Int> = mutableMapOf()
 
     for (xmlMap in tolkienMapsUIStructureXml.maps) {
         val mapId = xmlMap.id
 
         representations[mapId] = TolkienMapUIRepresentation(xmlMap.bitmap, xmlMap.lowerRes, xmlMap.lowestRes)
+        compasses[mapId] = xmlMap.compass
 
         val currentMapNavigations: MutableMap<TolkienMapId, Int> = mutableMapOf()
         navigations[mapId] = currentMapNavigations
@@ -28,12 +30,13 @@ fun parseTolkienMapsUIDetails(resources: Resources): TolkienMapsUIDetails {
         }
     }
 
-    return TolkienMapsUIDetailsFromResources(representations, navigations)
+    return TolkienMapsUIDetailsFromResources(representations, navigations, compasses)
 }
 
 private class TolkienMapsUIDetailsFromResources(
     private val representations: Map<TolkienMapId, TolkienMapUIRepresentation>,
-    private val navigations: Map<TolkienMapId, Map<TolkienMapId, Int>>
+    private val navigations: Map<TolkienMapId, Map<TolkienMapId, Int>>,
+    private val compasses: Map<TolkienMapId, Int>
 ) : TolkienMapsUIDetails {
     override fun getNavigations(mapId: TolkienMapId): Map<TolkienMapId, Int>? {
         return navigations[mapId]
@@ -42,10 +45,20 @@ private class TolkienMapsUIDetailsFromResources(
     override fun getRepresentation(mapId: TolkienMapId): TolkienMapUIRepresentation? {
         return representations[mapId]
     }
+
+    override fun getCompass(mapId: TolkienMapId): Int? {
+        return compasses[mapId]
+    }
 }
 
 private class TolkienMapsUIStructureXml(xmlParser: XmlResourceParser) {
-    class Map(val id: String, val bitmap: Int, val lowerRes: Int, val lowestRes: Int) {
+    class Map(
+        val id: String,
+        val bitmap: Int,
+        val lowerRes: Int,
+        val lowestRes: Int,
+        val compass: Int
+    ) {
         val actions: MutableList<Action> = mutableListOf()
 
         companion object {
@@ -54,19 +67,21 @@ private class TolkienMapsUIStructureXml(xmlParser: XmlResourceParser) {
                 var bitmap: Int? = null
                 var lowerRes: Int? = null
                 var lowestRes: Int? = null
+                var compass: Int? = null
                 for (i in 0 until xmlParser.attributeCount) {
                     when (xmlParser.getAttributeName(i)) {
                         "id" -> { id = xmlParser.getAttributeValue(i) }
                         "bitmap" -> { bitmap = getAttributeResourceValueOrNull(xmlParser, i) }
                         "lower_res" -> { lowerRes = getAttributeResourceValueOrNull(xmlParser, i) }
                         "lowest_res" -> { lowestRes = getAttributeResourceValueOrNull(xmlParser, i) }
+                        "compass" -> { compass = getAttributeResourceValueOrNull(xmlParser, i) }
                     }
                 }
-                if (id == null || bitmap == null || lowerRes == null || lowestRes == null) {
+                if (id == null || bitmap == null || lowerRes == null || lowestRes == null || compass == null) {
                     throw XmlPullParserException("Error while parsing <map>: required attributes not found")
                 }
 
-                val map = Map(id, bitmap, lowerRes, lowestRes)
+                val map = Map(id, bitmap, lowerRes, lowestRes, compass)
 
                 while (true) {
                     xmlParser.next()

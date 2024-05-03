@@ -1,5 +1,6 @@
 package my.danielleinad.tolkienmaps
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
@@ -55,11 +56,11 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         loaderLayer = binding.imageView.LayerDescription(CenteredTextLayerView(loaderString), Matrix())
         val tolkienMaps = CachedXmlResourceParser.getTolkienMaps(resources)
         thisTolkienMap = tolkienMaps.get(mapId)?: throw Exception("Unknown map: $mapId")
-        val tolkienMapsUIStructure = CachedXmlResourceParser.getTolkienMapsUIStructure(resources)
-        if (tolkienMapsUIStructure.getNavigations(mapId).isNullOrEmpty()) {
+        val tolkienMapsUIDetails = CachedXmlResourceParser.getTolkienMapsUIDetails(resources)
+        if (tolkienMapsUIDetails.getNavigations(mapId).isNullOrEmpty()) {
             binding.showHideOverlaidMaps.visibility = View.INVISIBLE
         }
-        val compass = CachedXmlResourceParser.getCompasses(resources)[mapId]
+        val compass = tolkienMapsUIDetails.getCompass(mapId)
             ?: throw Exception("Compass not found for $mapId")
         binding.compassView.setImageResource(compass)
     }
@@ -104,7 +105,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     }
 
     private fun constructOverlaidTolkienMaps() {
-        val tolkienMapsUIStructure = CachedXmlResourceParser.getTolkienMapsUIStructure(resources)
+        val tolkienMapsUIStructure = CachedXmlResourceParser.getTolkienMapsUIDetails(resources)
 
         val mainMapRepresentation = tolkienMapsUIStructure.getRepresentation(mapId)
             ?: throw Exception("Representation not found for map $mapId")
@@ -210,6 +211,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     }
 
     object AsyncRenderer : ViewModel() {
+        @SuppressLint("SyntheticAccessor")
         fun render(tolkienMapFragment: TolkienMapFragment) {
             viewModelScope.launch(Dispatchers.Default) {
                 tolkienMapFragment.renderTolkienMaps()
