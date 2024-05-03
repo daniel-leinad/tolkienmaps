@@ -8,5 +8,5 @@
     <map id="beleriand" translate_x="-1150" translate_y="635" scale="0.235"/>
     <map id="arda_first_age" translate_x="-5200" translate_y="-800" scale="3.25"/>
     <map id="arda_second_age" translate_x="-5200" translate_y="-800" scale="3.25"/>
-    <map id="numenor" translate_x="-2100" translate_y="4400" scale="0.305"/>
+    <map id="numenor" translate_x="-2100" translate_y="4150" scale="0.305"/>
 </root>

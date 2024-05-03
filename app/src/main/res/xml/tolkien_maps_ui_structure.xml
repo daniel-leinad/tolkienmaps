@@ -4,7 +4,6 @@
         bitmap="@drawable/generated_map_beleriand"
         lower_res="@drawable/generated_lower_res_map_beleriand"
         lowest_res="@drawable/generated_lowest_res_map_beleriand">
-<!--        <action destination="middle_earth" value="@id/action_beleriandMap_to_middleEarthMap"/>-->
     </map>
     <map id="middle_earth"
         bitmap="@drawable/generated_map_middle_earth"
@@ -45,7 +44,7 @@
         bitmap="@drawable/generated_map_arda_second_age"
         lower_res="@drawable/generated_lower_res_map_arda_second_age"
         lowest_res="@drawable/generated_lowest_res_map_arda_second_age">
-<!--        <action destination="middle_earth" value="@id/action_ardaSecondAgeMap_to_middleEarthMap"/>-->
+        <action destination="middle_earth" value="@id/action_ardaSecondAgeMap_to_middleEarthMap"/>
         <action destination="numenor" value="@id/action_ardaSecondAgeMap_to_numenorMap"/>
     </map>
     <map id="numenor"
