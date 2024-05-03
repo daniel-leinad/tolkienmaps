@@ -9,7 +9,7 @@ import my.danielleinad.tolkienmaps.ui.TolkienMapsUIDetails
 import org.xmlpull.v1.XmlPullParserException
 
 fun parseTolkienMapsUIDetails(resources: Resources): TolkienMapsUIDetails {
-    val xmlParser = resources.getXml(R.xml.tolkien_maps_ui_structure)
+    val xmlParser = resources.getXml(R.xml.tolkien_maps_ui_details)
     val tolkienMapsUIStructureXml = TolkienMapsUIStructureXml(xmlParser)
 
     val navigations: MutableMap<TolkienMapId, MutableMap<TolkienMapId, Int>> = mutableMapOf()

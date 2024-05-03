@@ -22,7 +22,7 @@ project.tasks.register("checkTolkienMapsResourceConsistency") {
         val tolkienMaps: Document = builder.parse(resourceDir.file("tolkien_maps.xml").asFile)
         tolkienMaps.documentElement.normalize()
 
-        val tolkienMapsUIStructure: Document = builder.parse(resourceDir.file("tolkien_maps_ui_structure.xml").asFile)
+        val tolkienMapsUIStructure: Document = builder.parse(resourceDir.file("tolkien_maps_ui_details.xml").asFile)
         tolkienMapsUIStructure.documentElement.normalize()
 
         val compasses: Document = builder.parse(resourceDir.file("compasses.xml").asFile)
