@@ -117,6 +117,9 @@
         <action
             android:id="@+id/action_ardaSecondAgeMap_to_middleEarthMap"
             app:destination="@id/middleEarthMap" />
+        <action
+            android:id="@+id/action_ardaSecondAgeMap_to_numenorMap"
+            app:destination="@id/numenorMap" />
     </fragment>
     <fragment
         android:id="@+id/ardaFirstAgeMap"
@@ -143,5 +146,12 @@
         <action
             android:id="@+id/action_atlasOfMiddleEarthMenuFragment_to_ardaSecondAgeMap"
             app:destination="@id/ardaSecondAgeMap" />
+        <action
+            android:id="@+id/action_atlasOfMiddleEarthMenuFragment_to_numenorMap"
+            app:destination="@id/numenorMap" />
     </fragment>
+    <fragment
+        android:id="@+id/numenorMap"
+        android:name="my.danielleinad.tolkienmaps.NumenorMap"
+        android:label="NumenorMap" />
 </navigation>

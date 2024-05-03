@@ -45,6 +45,11 @@
         bitmap="@drawable/generated_map_arda_second_age"
         lower_res="@drawable/generated_lower_res_map_arda_second_age"
         lowest_res="@drawable/generated_lowest_res_map_arda_second_age">
-        <action destination="middle_earth" value="@id/action_ardaSecondAgeMap_to_middleEarthMap"/>
+<!--        <action destination="middle_earth" value="@id/action_ardaSecondAgeMap_to_middleEarthMap"/>-->
+        <action destination="numenor" value="@id/action_ardaSecondAgeMap_to_numenorMap"/>
     </map>
+    <map id="numenor"
+        bitmap="@drawable/generated_map_numenor"
+        lower_res="@drawable/generated_lower_res_map_numenor"
+        lowest_res="@drawable/generated_lowest_res_map_numenor"/>
 </root>

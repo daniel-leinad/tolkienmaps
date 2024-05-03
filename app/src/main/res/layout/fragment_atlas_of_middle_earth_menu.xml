@@ -25,4 +25,13 @@
             android:text="Arda Second Age" />
     </FrameLayout>
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="85dp">
+        <Button
+            android:id="@+id/numenor_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:text="Numenor" />
+    </FrameLayout>
+
 </LinearLayout>

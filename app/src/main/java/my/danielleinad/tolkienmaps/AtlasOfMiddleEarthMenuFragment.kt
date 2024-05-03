@@ -30,5 +30,9 @@ class AtlasOfMiddleEarthMenuFragment : Fragment() {
         binding.ardaSecondAgeButton.setOnClickListener {
             findNavController().navigate(R.id.action_atlasOfMiddleEarthMenuFragment_to_ardaSecondAgeMap)
         }
+
+        binding.numenorButton.setOnClickListener {
+            findNavController().navigate(R.id.action_atlasOfMiddleEarthMenuFragment_to_numenorMap)
+        }
     }
 }
