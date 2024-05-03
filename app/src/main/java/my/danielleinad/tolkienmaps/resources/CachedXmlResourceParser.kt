@@ -5,7 +5,6 @@ import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMapId
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
 import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
 
-//TODO cached data should be immutable
 object CachedXmlResourceParser {
     private val tolkienMaps: MutableMap<Resources, TolkienMaps> = mutableMapOf()
     private val tolkienMapsUIStructure: MutableMap<Resources, TolkienMapsUIStructure> = mutableMapOf()
