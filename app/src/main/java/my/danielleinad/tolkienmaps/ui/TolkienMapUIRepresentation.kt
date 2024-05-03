@@ -1,5 +1,3 @@
 package my.danielleinad.tolkienmaps.ui
 
-import android.graphics.Bitmap
-
-class TolkienMapUIRepresentation(val bitmap: Bitmap, val lowerRes: Bitmap, val lowestRes: Bitmap)
+class TolkienMapUIRepresentation(val original: Int, val lowerRes: Int, val lowestRes: Int)

@@ -5,6 +5,7 @@ import android.content.res.XmlResourceParser
 import android.graphics.BitmapFactory
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMapId
 import my.danielleinad.tolkienmaps.R
+import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
 import my.danielleinad.tolkienmaps.ui.TolkienMapUIRepresentation
 import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
 import org.xmlpull.v1.XmlPullParserException
@@ -13,23 +14,36 @@ fun parseTolkienMapsUIStructure(resources: Resources): TolkienMapsUIStructure {
     val xmlParser = resources.getXml(R.xml.tolkien_maps_ui_structure)
     val tolkienMapsUIStructureXml = TolkienMapsUIStructureXml(xmlParser)
 
-    val actions: MutableMap<Pair<TolkienMapId, TolkienMapId>, Int> = mutableMapOf()
+    val navigations: MutableMap<TolkienMapId, MutableMap<TolkienMapId, Int>> = mutableMapOf()
     val representations: MutableMap<TolkienMapId, TolkienMapUIRepresentation> = mutableMapOf()
 
     for (xmlMap in tolkienMapsUIStructureXml.maps) {
         val mapId = xmlMap.id
 
-        val bitmap = BitmapFactory.decodeResource(resources, xmlMap.bitmap)
-        val lowerRes = BitmapFactory.decodeResource(resources, xmlMap.lowerRes)
-        val lowestRes = BitmapFactory.decodeResource(resources, xmlMap.lowestRes)
-        representations[mapId] = TolkienMapUIRepresentation(bitmap, lowerRes, lowestRes)
+        representations[mapId] = TolkienMapUIRepresentation(xmlMap.bitmap, xmlMap.lowerRes, xmlMap.lowestRes)
+
+        val currentMapNavigations: MutableMap<TolkienMapId, Int> = mutableMapOf()
+        navigations[mapId] = currentMapNavigations
 
         for (action in xmlMap.actions) {
-            actions[Pair(mapId, action.destination)] = action.value
+            currentMapNavigations[action.destination] = action.value
         }
     }
 
-    return TolkienMapsUIStructure(representations, actions)
+    return TolkienMapsUIStructureImpl(representations, navigations)
+}
+
+class TolkienMapsUIStructureImpl(
+    private val representations: Map<TolkienMapId, TolkienMapUIRepresentation>,
+    private val navigations: Map<TolkienMapId, Map<TolkienMapId, Int>>
+) : TolkienMapsUIStructure {
+    override fun getNavigations(mapId: TolkienMapId): Map<TolkienMapId, Int>? {
+        return navigations[mapId]
+    }
+
+    override fun getRepresentation(mapId: TolkienMapId): TolkienMapUIRepresentation? {
+        return representations[mapId]
+    }
 }
 
 private class TolkienMapsUIStructureXml(xmlParser: XmlResourceParser) {
