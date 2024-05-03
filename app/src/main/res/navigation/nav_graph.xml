@@ -26,11 +26,8 @@
             android:id="@+id/action_mainMenu_to_beleriandMap"
             app:destination="@id/beleriandMap" />
         <action
-            android:id="@+id/action_mainMenu_to_ardaSecondAgeMap"
-            app:destination="@id/ardaSecondAgeMap" />
-        <action
-            android:id="@+id/action_mainMenu_to_ardaFirstAgeMap"
-            app:destination="@id/ardaFirstAgeMap" />
+            android:id="@+id/action_mainMenu_to_atlasOfMiddleEarthMenuFragment"
+            app:destination="@id/atlasOfMiddleEarthMenuFragment" />
     </fragment>
     <fragment
         android:id="@+id/hobbitMenu"
@@ -134,5 +131,17 @@
         <action
             android:id="@+id/action_ardaFirstAgeMap_to_beleriandMap"
             app:destination="@id/beleriandMap" />
+    </fragment>
+    <fragment
+        android:id="@+id/atlasOfMiddleEarthMenuFragment"
+        android:name="my.danielleinad.tolkienmaps.AtlasOfMiddleEarthMenuFragment"
+        android:label="fragment_atlas_of_middle_earth_menu"
+        tools:layout="@layout/fragment_atlas_of_middle_earth_menu" >
+        <action
+            android:id="@+id/action_atlasOfMiddleEarthMenuFragment_to_ardaFirstAgeMap"
+            app:destination="@id/ardaFirstAgeMap" />
+        <action
+            android:id="@+id/action_atlasOfMiddleEarthMenuFragment_to_ardaSecondAgeMap"
+            app:destination="@id/ardaSecondAgeMap" />
     </fragment>
 </navigation>

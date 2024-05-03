@@ -45,12 +45,8 @@ class MainMenu : Fragment() {
             findNavController().navigate(R.id.action_mainMenu_to_beleriandMap)
         }
 
-        binding.ardaSecondAgeButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainMenu_to_ardaSecondAgeMap)
-        }
-
-        binding.ardaFirstAgeButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainMenu_to_ardaFirstAgeMap)
+        binding.atlasOfMiddleEarthButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mainMenu_to_atlasOfMiddleEarthMenuFragment)
         }
     }
 
