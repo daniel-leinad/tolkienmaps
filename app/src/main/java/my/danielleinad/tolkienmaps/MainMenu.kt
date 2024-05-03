@@ -44,6 +44,10 @@ class MainMenu : Fragment() {
         binding.beleriandButton.setOnClickListener {
             findNavController().navigate(R.id.action_mainMenu_to_beleriandMap)
         }
+
+        binding.ardaSecondAgeButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mainMenu_to_ardaSecondAgeMap)
+        }
     }
 
 }

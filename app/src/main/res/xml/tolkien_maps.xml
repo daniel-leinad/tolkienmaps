@@ -6,4 +6,5 @@
     <map id="shire" scale="0.05" translate_x="900" translate_y="1160" rotate="-5"/>
     <map id="thror" scale="0.01325" translate_x="2678" translate_y="877" rotate="90"/>
     <map id="beleriand" translate_x="-2250" translate_y="135" scale="0.375"/>
+    <map id="arda_second_age" translate_x="-5200" translate_y="-800" scale="3.25"/>
 </root>
