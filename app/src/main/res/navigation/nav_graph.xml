@@ -23,11 +23,11 @@
             android:id="@+id/action_mainMenu_to_middleEarthMap"
             app:destination="@id/middleEarthMap" />
         <action
-            android:id="@+id/action_mainMenu_to_beleriandMap"
-            app:destination="@id/beleriandMap" />
-        <action
             android:id="@+id/action_mainMenu_to_atlasOfMiddleEarthMenuFragment"
             app:destination="@id/atlasOfMiddleEarthMenuFragment" />
+        <action
+            android:id="@+id/action_mainMenu_to_silmarillionMenu"
+            app:destination="@id/silmarillionMenu" />
     </fragment>
     <fragment
         android:id="@+id/hobbitMenu"
@@ -78,9 +78,6 @@
         <action
             android:id="@+id/action_middleEarthMap_to_throrMap"
             app:destination="@id/throrMap" />
-        <action
-            android:id="@+id/action_middleEarthMap_to_beleriandMap"
-            app:destination="@id/beleriandMap" />
     </fragment>
     <fragment
         android:id="@+id/wilderlandMap"
@@ -129,9 +126,6 @@
             android:id="@+id/action_ardaFirstAgeMap_to_middleEarthMap"
             app:destination="@id/middleEarthMap" />
         <action
-            android:id="@+id/action_ardaFirstAgeMap_to_ardaSecondAgeMap"
-            app:destination="@id/ardaSecondAgeMap" />
-        <action
             android:id="@+id/action_ardaFirstAgeMap_to_beleriandMap"
             app:destination="@id/beleriandMap" />
     </fragment>
@@ -154,4 +148,13 @@
         android:id="@+id/numenorMap"
         android:name="my.danielleinad.tolkienmaps.NumenorMap"
         android:label="NumenorMap" />
+    <fragment
+        android:id="@+id/silmarillionMenu"
+        android:name="my.danielleinad.tolkienmaps.SilmarillionMenu"
+        android:label="fragment_silmarillion_menu"
+        tools:layout="@layout/fragment_silmarillion_menu" >
+        <action
+            android:id="@+id/action_silmarillionMenu_to_beleriandMap"
+            app:destination="@id/beleriandMap" />
+    </fragment>
 </navigation>

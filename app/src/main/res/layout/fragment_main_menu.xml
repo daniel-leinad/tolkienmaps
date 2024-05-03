@@ -45,9 +45,9 @@
         android:layout_height="60dp">
 
         <Button
-            android:id="@+id/beleriand_button"
+            android:id="@+id/silmarillion_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:text="Beleriand" />
+            android:text="Silmarillion" />
 
     </FrameLayout>
 

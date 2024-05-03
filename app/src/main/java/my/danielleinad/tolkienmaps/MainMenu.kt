@@ -41,8 +41,8 @@ class MainMenu : Fragment() {
             findNavController().navigate(R.id.action_mainMenu_to_lotrMenu)
         }
 
-        binding.beleriandButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainMenu_to_beleriandMap)
+        binding.silmarillionButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mainMenu_to_silmarillionMenu)
         }
 
         binding.atlasOfMiddleEarthButton.setOnClickListener {
