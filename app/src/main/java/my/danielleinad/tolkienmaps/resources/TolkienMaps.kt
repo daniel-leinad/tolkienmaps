@@ -11,9 +11,9 @@ fun parseTolkienMaps(resources: Resources): TolkienMaps {
     val xmlParser = resources.getXml(R.xml.tolkien_maps)
     val tolkienMapsXml = TolkienMapsXml(xmlParser)
 
-    val maps: MutableMap<String, TolkienMapsImpl.TolkienMap> = mutableMapOf()
+    val maps: MutableMap<String, TolkienMapsFromResources.TolkienMap> = mutableMapOf()
     for (xmlMap in tolkienMapsXml.maps) {
-        val map = TolkienMapsImpl.TolkienMap(
+        val map = TolkienMapsFromResources.TolkienMap(
             id = xmlMap.id,
             translateX = xmlMap.translateX,
             translateY = xmlMap.translateY,
@@ -23,11 +23,10 @@ fun parseTolkienMaps(resources: Resources): TolkienMaps {
         maps[xmlMap.id] = map
     }
 
-    return TolkienMapsImpl(maps)
+    return TolkienMapsFromResources(maps)
 }
 
-// TODO rename class
-private class TolkienMapsImpl(val tolkienMaps: Map<TolkienMapId, TolkienMap>) : TolkienMaps {
+private class TolkienMapsFromResources(val tolkienMaps: Map<TolkienMapId, TolkienMap>) : TolkienMaps {
     override fun get(mapId: TolkienMapId): TolkienMaps.TolkienMap {
         return tolkienMaps[mapId] as TolkienMaps.TolkienMap
     }

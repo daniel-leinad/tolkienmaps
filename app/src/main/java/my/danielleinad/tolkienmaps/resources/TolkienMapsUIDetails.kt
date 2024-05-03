@@ -5,10 +5,10 @@ import android.content.res.XmlResourceParser
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMapId
 import my.danielleinad.tolkienmaps.R
 import my.danielleinad.tolkienmaps.ui.TolkienMapUIRepresentation
-import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
+import my.danielleinad.tolkienmaps.ui.TolkienMapsUIDetails
 import org.xmlpull.v1.XmlPullParserException
 
-fun parseTolkienMapsUIStructure(resources: Resources): TolkienMapsUIStructure {
+fun parseTolkienMapsUIDetails(resources: Resources): TolkienMapsUIDetails {
     val xmlParser = resources.getXml(R.xml.tolkien_maps_ui_structure)
     val tolkienMapsUIStructureXml = TolkienMapsUIStructureXml(xmlParser)
 
@@ -28,13 +28,13 @@ fun parseTolkienMapsUIStructure(resources: Resources): TolkienMapsUIStructure {
         }
     }
 
-    return TolkienMapsUIStructureImpl(representations, navigations)
+    return TolkienMapsUIDetailsFromResources(representations, navigations)
 }
 
-class TolkienMapsUIStructureImpl(
+private class TolkienMapsUIDetailsFromResources(
     private val representations: Map<TolkienMapId, TolkienMapUIRepresentation>,
     private val navigations: Map<TolkienMapId, Map<TolkienMapId, Int>>
-) : TolkienMapsUIStructure {
+) : TolkienMapsUIDetails {
     override fun getNavigations(mapId: TolkienMapId): Map<TolkienMapId, Int>? {
         return navigations[mapId]
     }

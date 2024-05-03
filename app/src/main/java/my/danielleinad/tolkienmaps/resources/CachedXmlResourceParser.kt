@@ -3,11 +3,11 @@ package my.danielleinad.tolkienmaps.resources
 import android.content.res.Resources
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMapId
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
-import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
+import my.danielleinad.tolkienmaps.ui.TolkienMapsUIDetails
 
 object CachedXmlResourceParser {
     private val tolkienMaps: MutableMap<Resources, TolkienMaps> = mutableMapOf()
-    private val tolkienMapsUIStructure: MutableMap<Resources, TolkienMapsUIStructure> = mutableMapOf()
+    private val tolkienMapsUIDetails: MutableMap<Resources, TolkienMapsUIDetails> = mutableMapOf()
     private val compasses: MutableMap<Resources, Map<TolkienMapId, Int>> = mutableMapOf()
 
     fun getTolkienMaps(resources: Resources): TolkienMaps {
@@ -23,15 +23,15 @@ object CachedXmlResourceParser {
         return res
     }
 
-    fun getTolkienMapsUIStructure(resources: Resources): TolkienMapsUIStructure {
-        val cachedTolkienMapsUIStructure = tolkienMapsUIStructure[resources]
+    fun getTolkienMapsUIStructure(resources: Resources): TolkienMapsUIDetails {
+        val cachedTolkienMapsUIStructure = tolkienMapsUIDetails[resources]
         if (cachedTolkienMapsUIStructure != null) {
             return cachedTolkienMapsUIStructure
         }
 
-        val res = parseTolkienMapsUIStructure(resources)
+        val res = parseTolkienMapsUIDetails(resources)
 
-        tolkienMapsUIStructure[resources] = res
+        tolkienMapsUIDetails[resources] = res
 
         return res
     }

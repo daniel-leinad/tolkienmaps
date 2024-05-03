@@ -21,7 +21,7 @@ import my.danielleinad.layeredscalableview.LayeredScalableView
 import my.danielleinad.tolkienmaps.databinding.FragmentTolkienMapBinding
 import my.danielleinad.tolkienmaps.resources.CachedXmlResourceParser
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
-import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
+import my.danielleinad.tolkienmaps.ui.TolkienMapsUIDetails
 import my.danielleinad.layeredscalableview.LayeredScalableView.LayerDescription
 import my.danielleinad.tolkienmaps.resources.CachedResourceBitmapProvider
 import kotlin.math.absoluteValue
@@ -127,10 +127,10 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     }
 
     private fun appendOverlaidTolkienMaps(
-        tolkienMapsUIStructure: TolkienMapsUIStructure,
+        tolkienMapsUIDetails: TolkienMapsUIDetails,
     ) {
         val imageView = binding.imageView
-        val navigations = tolkienMapsUIStructure.getNavigations(mapId)
+        val navigations = tolkienMapsUIDetails.getNavigations(mapId)
             ?: throw Exception("Navigations not found for $mapId")
         val tolkienMaps = CachedXmlResourceParser.getTolkienMaps(resources)
         for (entry in navigations) {
@@ -143,7 +143,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
             matrix.postScale(overlaidTolkienMap.scale, overlaidTolkienMap.scale)
             matrix.postTranslate(overlaidTolkienMap.translateX, overlaidTolkienMap.translateY)
 
-            val overlaidTolkienMapRepresentation = tolkienMapsUIStructure.getRepresentation(overlaidTolkienMapId)
+            val overlaidTolkienMapRepresentation = tolkienMapsUIDetails.getRepresentation(overlaidTolkienMapId)
                 ?: throw Exception("Representation not found for $overlaidTolkienMapId")
 
             val originalBitmap = CachedResourceBitmapProvider.get(resources, overlaidTolkienMapRepresentation.original)
