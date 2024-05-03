@@ -1,6 +1,5 @@
 package my.danielleinad.tolkienmaps
 
-import android.util.Log
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
@@ -26,8 +25,6 @@ import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
 import my.danielleinad.layeredscalableview.LayeredScalableView.LayerDescription
 import my.danielleinad.tolkienmaps.resources.CachedResourceBitmapProvider
 import kotlin.math.absoluteValue
-
-const val TAG = "TolkienMapFragment"
 
 open class TolkienMapFragment(private val mapId: String) : Fragment() {
     private lateinit var binding: FragmentTolkienMapBinding

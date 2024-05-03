@@ -15,7 +15,8 @@
         android:id="@+id/compassView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="right" />
+        android:layout_gravity="right"
+        android:contentDescription="@string/compass_description"/>
 
     <FrameLayout
         android:layout_width="75dp"
@@ -29,7 +30,8 @@
             android:layout_height="60dp"
             android:background="@color/transparent"
             android:scaleType="centerCrop"
-            android:src="@drawable/show_hide_layers_selector" />
+            android:src="@drawable/show_hide_layers_selector"
+            android:contentDescription="@string/show_hide_button_description"/>
     </FrameLayout>
 
 </FrameLayout>

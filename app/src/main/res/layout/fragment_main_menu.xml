@@ -47,7 +47,7 @@
         <Button
             android:id="@+id/silmarillion_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:text="Silmarillion" />
+            android:text="@string/silmarillion" />
 
     </FrameLayout>
 
@@ -58,7 +58,7 @@
         <Button
             android:id="@+id/atlas_of_middle_earth_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:text="Atlas Of Middle-Earth" />
+            android:text="@string/atlas_of_middle_earth" />
 
     </FrameLayout>
 

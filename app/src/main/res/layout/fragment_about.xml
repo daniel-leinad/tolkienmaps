@@ -24,13 +24,14 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/imageViewShowHideButton"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/show_hide_layers" />
+                android:src="@drawable/show_hide_layers"
+                android:contentDescription="@string/show_hide_button_description"/>
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/showHideButtonInstruction"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 style="@style/Theme.TolkienMaps.Instruction"
@@ -48,7 +49,7 @@
                 android:layout_height="50dp"/>
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/showOverlaidMapInstruction"
                 style="@style/Theme.TolkienMaps.Instruction"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -66,7 +67,7 @@
                 android:layout_height="50dp"/>
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/openOverlaidMapInstruction"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 style="@style/Theme.TolkienMaps.Instruction"
@@ -75,7 +76,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/createdByTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"

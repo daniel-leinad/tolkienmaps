@@ -13,7 +13,7 @@
         <Button
             android:id="@+id/arda_first_age_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:text="Arda First Age" />
+            android:text="@string/arda_first_age" />
     </FrameLayout>
 
     <FrameLayout
@@ -22,7 +22,7 @@
         <Button
             android:id="@+id/arda_second_age_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:text="Arda Second Age" />
+            android:text="@string/arda_second_age" />
     </FrameLayout>
 
     <FrameLayout
@@ -31,7 +31,7 @@
         <Button
             android:id="@+id/numenor_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:text="Numenor" />
+            android:text="@string/numenor" />
     </FrameLayout>
 
 </LinearLayout>

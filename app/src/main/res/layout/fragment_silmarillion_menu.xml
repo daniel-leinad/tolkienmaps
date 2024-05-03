@@ -13,7 +13,7 @@
         <Button
             android:id="@+id/beleriand_button"
             style="@style/Theme.TolkienMaps.Button"
-            android:text="Beleriand" />
+            android:text="@string/beleriand" />
     </FrameLayout>
 
 </LinearLayout>

@@ -6,7 +6,7 @@
     <string name="about">About</string>
     <string name="wilderland">Wilderland</string>
     <string name="thror_map">Thror\'s map</string>
-    <string name="middle_earth">Middle Earth</string>
+    <string name="middle_earth">Middle-Earth</string>
     <string name="shire">Part of the Shire</string>
     <string name="rohan_gondor_mordor">Rohan, Gondor and Mordor</string>
     <string name="about_info">created by Daniel Vedeneev\nfundan.fundan@gmail.com\n2023</string>
@@ -14,4 +14,12 @@
     <string name="instruction_show_smaller_maps">Tap this icon to show smaller maps</string>
     <string name="instruction_show_smaller_map">Single tap a smaller map to show it</string>
     <string name="instruction_open_smaller_map">Double tap a smaller map to open it</string>
+    <string name="show_hide_button_description">show/hide smaller maps button</string>
+    <string name="compass_description">Compass</string>
+    <string name="arda_first_age">Arda (first age)</string>
+    <string name="arda_second_age">Arda (second age)</string>
+    <string name="numenor">Numenor</string>
+    <string name="silmarillion">Silmarillion</string>
+    <string name="atlas_of_middle_earth">Atlas Of Middle-Earth</string>
+    <string name="beleriand">Beleriand</string>
 </resources>

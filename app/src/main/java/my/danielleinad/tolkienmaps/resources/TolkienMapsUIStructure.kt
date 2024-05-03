@@ -2,10 +2,8 @@ package my.danielleinad.tolkienmaps.resources
 
 import android.content.res.Resources
 import android.content.res.XmlResourceParser
-import android.graphics.BitmapFactory
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMapId
 import my.danielleinad.tolkienmaps.R
-import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
 import my.danielleinad.tolkienmaps.ui.TolkienMapUIRepresentation
 import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
 import org.xmlpull.v1.XmlPullParserException

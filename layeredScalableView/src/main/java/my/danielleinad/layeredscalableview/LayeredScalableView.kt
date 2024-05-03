@@ -21,7 +21,7 @@ class LayeredScalableView(context: android.content.Context, attrs: AttributeSet)
 
     private var cachedPoints: MutableList<XYPoint> = mutableListOf()
 
-    private object synchronizedLayoutAccess {
+    private object SynchronizedLayoutAccess {
         private var layoutData: LayoutData? = null
         private val layoutMonitor = Object()
 
@@ -56,7 +56,7 @@ class LayeredScalableView(context: android.content.Context, attrs: AttributeSet)
     fun alignCenterLayer(layer: LayerDescription) {
         // TODO does this function belong here?
 
-        val layout = synchronizedLayoutAccess.waitForLayout()
+        val layout = SynchronizedLayoutAccess.waitForLayout()
 
         containerMatrix = Matrix()
         val layerMatrix = layer.getMatrix()
@@ -85,7 +85,7 @@ class LayeredScalableView(context: android.content.Context, attrs: AttributeSet)
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        synchronizedLayoutAccess.updateLayout(LayoutData(left, top, right, bottom))
+        SynchronizedLayoutAccess.updateLayout(LayoutData(left, top, right, bottom))
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
