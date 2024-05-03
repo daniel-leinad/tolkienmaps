@@ -75,6 +75,9 @@
         <action
             android:id="@+id/action_middleEarthMap_to_throrMap"
             app:destination="@id/throrMap" />
+        <action
+            android:id="@+id/action_middleEarthMap_to_beleriandMap"
+            app:destination="@id/beleriandMap" />
     </fragment>
     <fragment
         android:id="@+id/wilderlandMap"

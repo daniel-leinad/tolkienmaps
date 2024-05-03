@@ -14,6 +14,7 @@
         <action destination="rohan_gondor_mordor" value="@id/action_middleEarthMap_to_rohanGondorMordorMap"/>
         <action destination="shire" value="@id/action_middleEarthMap_to_shireMap"/>
         <action destination="thror" value="@id/action_middleEarthMap_to_throrMap"/>
+        <action destination="beleriand" value="@id/action_middleEarthMap_to_beleriandMap"/>
     </map>
     <map id="wilderland"
         bitmap="@drawable/generated_map_wilderland"
