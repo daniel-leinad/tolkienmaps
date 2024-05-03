@@ -4,7 +4,7 @@
         bitmap="@drawable/generated_map_beleriand"
         lower_res="@drawable/generated_lower_res_map_beleriand"
         lowest_res="@drawable/generated_lowest_res_map_beleriand">
-        <action destination="middle_earth" value="@id/action_beleriandMap_to_middleEarthMap"/>
+<!--        <action destination="middle_earth" value="@id/action_beleriandMap_to_middleEarthMap"/>-->
     </map>
     <map id="middle_earth"
         bitmap="@drawable/generated_map_middle_earth"
@@ -34,6 +34,13 @@
         bitmap="@drawable/generated_map_thror"
         lower_res="@drawable/generated_lower_res_map_thror"
         lowest_res="@drawable/generated_lowest_res_map_thror"/>
+    <map id="arda_first_age"
+        bitmap="@drawable/generated_map_arda_first_age"
+        lower_res="@drawable/generated_lower_res_map_arda_first_age"
+        lowest_res="@drawable/generated_lowest_res_map_arda_first_age">
+        <action destination="beleriand" value="@id/action_ardaFirstAgeMap_to_beleriandMap" />
+<!--        <action destination="middle_earth" value="@id/action_ardaFirstAgeMap_to_middleEarthMap"/>-->
+    </map>
     <map id="arda_second_age"
         bitmap="@drawable/generated_map_arda_second_age"
         lower_res="@drawable/generated_lower_res_map_arda_second_age"

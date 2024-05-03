@@ -6,5 +6,6 @@
     <map id="thror" compass="@drawable/compass_thror"/>
     <map id="wilderland" compass="@drawable/compass_wilderland"/>
     <map id="beleriand" compass="@drawable/compass_beleriand"/>
+    <map id="arda_first_age" compass="@drawable/compass_middle_earth"/>
     <map id="arda_second_age" compass="@drawable/compass_middle_earth"/>
 </root>

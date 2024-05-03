@@ -56,6 +56,17 @@
         android:layout_height="60dp">
 
         <Button
+            android:id="@+id/arda_first_age_button"
+            style="@style/Theme.TolkienMaps.Button"
+            android:text="Arda First Age" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp">
+
+        <Button
             android:id="@+id/arda_second_age_button"
             style="@style/Theme.TolkienMaps.Button"
             android:text="Arda Second Age" />

@@ -48,6 +48,10 @@ class MainMenu : Fragment() {
         binding.ardaSecondAgeButton.setOnClickListener {
             findNavController().navigate(R.id.action_mainMenu_to_ardaSecondAgeMap)
         }
+
+        binding.ardaFirstAgeButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mainMenu_to_ardaFirstAgeMap)
+        }
     }
 
 }
