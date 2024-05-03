@@ -24,6 +24,7 @@ import my.danielleinad.tolkienmaps.resources.CachedXmlResourceParser
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
 import my.danielleinad.tolkienmaps.ui.TolkienMapsUIStructure
 import my.danielleinad.layeredscalableview.LayeredScalableView.LayerDescription
+import my.danielleinad.tolkienmaps.resources.CachedResourceBitmapProvider
 import kotlin.math.absoluteValue
 
 const val TAG = "TolkienMapFragment"
@@ -56,8 +57,9 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         // TODO I don't like the fact that loading screen is implemented as a layer in LayeredScalableView
         loaderLayer = binding.imageView.LayerDescription(CenteredTextLayerView(loaderString), Matrix())
         val tolkienMaps = CachedXmlResourceParser.getTolkienMaps(resources)
-        thisTolkienMap = tolkienMaps.maps[mapId]?: throw Exception("Unknown map: $mapId")
-        if (thisTolkienMap.positions.size == 0) {
+        thisTolkienMap = tolkienMaps.get(mapId)?: throw Exception("Unknown map: $mapId")
+        val tolkienMapsUIStructure = CachedXmlResourceParser.getTolkienMapsUIStructure(resources)
+        if (tolkienMapsUIStructure.getNavigations(mapId).isNullOrEmpty()) {
             binding.showHideOverlaidMaps.visibility = View.INVISIBLE
         }
         val compass = CachedXmlResourceParser.getCompasses(resources)[mapId]
@@ -107,66 +109,74 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     private fun constructOverlaidTolkienMaps() {
         val tolkienMapsUIStructure = CachedXmlResourceParser.getTolkienMapsUIStructure(resources)
 
-        val mainMapRepresentation = tolkienMapsUIStructure.representations[mapId]
+        val mainMapRepresentation = tolkienMapsUIStructure.getRepresentation(mapId)
             ?: throw Exception("Representation not found for map $mapId")
+
+        val mainLayerMatrix = Matrix()
+        mainLayerMatrix.postRotate(thisTolkienMap.rotate)
+        mainLayerMatrix.postScale(thisTolkienMap.scale, thisTolkienMap.scale)
+        mainLayerMatrix.postTranslate(thisTolkienMap.translateX, thisTolkienMap.translateY)
 
         mainLayer = binding.imageView.LayerDescription(
             OptimizedBitmapLayerView(
-                mainMapRepresentation.bitmap,
-                mainMapRepresentation.lowerRes,
-                mainMapRepresentation.lowestRes,
+                CachedResourceBitmapProvider.get(resources, mainMapRepresentation.original),
+                CachedResourceBitmapProvider.get(resources, mainMapRepresentation.lowerRes),
+                CachedResourceBitmapProvider.get(resources, mainMapRepresentation.lowestRes),
             ),
-            Matrix()
+            mainLayerMatrix
         )
 
-        val initialMatrix = Matrix()
-        appendMapLayersRecursively(thisTolkienMap, initialMatrix, tolkienMapsUIStructure)
+        appendOverlaidTolkienMaps(tolkienMapsUIStructure)
     }
 
-    private fun appendMapLayersRecursively(
-        tolkienMap: TolkienMaps.TolkienMap,
-        initialMatrix: Matrix,
+    private fun appendOverlaidTolkienMaps(
         tolkienMapsUIStructure: TolkienMapsUIStructure,
     ) {
         val imageView = binding.imageView
-        for (position in tolkienMap.positions) {
-            val matrix = Matrix()
-            matrix.postRotate(position.rotate)
-            matrix.postScale(position.scale, position.scale)
-            matrix.postTranslate(position.translateX, position.translateY)
-            matrix.postConcat(initialMatrix)
+        val navigations = tolkienMapsUIStructure.getNavigations(mapId)
+            ?: throw Exception("Navigations not found for $mapId")
+        val tolkienMaps = CachedXmlResourceParser.getTolkienMaps(resources)
+        for (entry in navigations) {
+            val overlaidTolkienMapId = entry.key
+            val overlaidTolkienMap = tolkienMaps.get(overlaidTolkienMapId)
+                ?: throw Exception("Tolkien map with id $overlaidTolkienMapId not found")
 
-            val otherMapId = position.map.id
-            val otherMapRepresentation = tolkienMapsUIStructure.representations[otherMapId]?: throw Exception("Representation not found for")
+            val matrix = Matrix()
+            matrix.postRotate(overlaidTolkienMap.rotate)
+            matrix.postScale(overlaidTolkienMap.scale, overlaidTolkienMap.scale)
+            matrix.postTranslate(overlaidTolkienMap.translateX, overlaidTolkienMap.translateY)
+
+            val overlaidTolkienMapRepresentation = tolkienMapsUIStructure.getRepresentation(overlaidTolkienMapId)
+                ?: throw Exception("Representation not found for $overlaidTolkienMapId")
+
+            val originalBitmap = CachedResourceBitmapProvider.get(resources, overlaidTolkienMapRepresentation.original)
+            val lowerResBitmap = CachedResourceBitmapProvider.get(resources, overlaidTolkienMapRepresentation.lowerRes)
+            val lowestResBitmap = CachedResourceBitmapProvider.get(resources, overlaidTolkienMapRepresentation.lowestRes)
 
             val mapLayer = imageView.LayerDescription(
                 OptimizedBitmapLayerView(
-                    otherMapRepresentation.bitmap,
-                    otherMapRepresentation.lowerRes,
-                    otherMapRepresentation.lowestRes,
+                    originalBitmap,
+                    lowerResBitmap,
+                    lowestResBitmap,
                 ), matrix
             )
-            val action = tolkienMapsUIStructure.actions[Pair(mapId, otherMapId)]
-            if (action == null) {
-                Log.w(TAG, "Action not found for map $otherMapId")
-            } else {
-                mapLayer.onDoubleTapListener = {
-                    findNavController().navigate(action)
-                    true
-                }
+            val action = entry.value
+            mapLayer.onDoubleTapListener = {
+                findNavController().navigate(action)
+                true
             }
 
             val container = RectangleLayerView(
-                otherMapRepresentation.bitmap.width.toFloat(),
-                otherMapRepresentation.bitmap.height.toFloat(),
+                originalBitmap.width.toFloat(),
+                originalBitmap.height.toFloat(),
                 true,
                 containerPaint
             )
             val containerLayer = imageView.LayerDescription(container, Matrix(matrix))
 
             val borders = RectangleLayerView(
-                otherMapRepresentation.bitmap.width.toFloat(),
-                otherMapRepresentation.bitmap.height.toFloat(),
+                originalBitmap.width.toFloat(),
+                originalBitmap.height.toFloat(),
                 false,
                 borderPaint
             )
@@ -181,8 +191,6 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
             }
 
             overlaidTolkienMaps.add(layer)
-
-            appendMapLayersRecursively(position.map, matrix, tolkienMapsUIStructure)
         }
     }
 

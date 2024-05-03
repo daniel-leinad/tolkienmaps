@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <map id="middle_earth">
-        <position id="wilderland" scale="0.265" translate_x="1790" translate_y="665"/>
-        <position id="rohan_gondor_mordor" scale="0.225" translate_x="1950" translate_y="2100"/>
-        <position id="shire" scale="0.05" translate_x="900" translate_y="1160" rotate="-5"/>
-    </map>
-    <map id="wilderland">
-        <position id="thror" scale="0.05" translate_x="3350" translate_y="800" rotate="90"/>
-    </map>
-    <map id="rohan_gondor_mordor"/>
-    <map id="shire"/>
-    <map id="thror"/>
+    <map id="middle_earth" scale="1.0" translate_x="0" translate_y="0" />
+    <map id="wilderland" scale="0.265" translate_x="1790" translate_y="665" />
+    <map id="rohan_gondor_mordor" scale="0.225" translate_x="1950" translate_y="2100"/>
+    <map id="shire" scale="0.05" translate_x="900" translate_y="1160" rotate="-5"/>
+    <map id="thror" scale="0.01325" translate_x="2678" translate_y="877" rotate="90"/>
 </root>

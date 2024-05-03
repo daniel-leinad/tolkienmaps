@@ -2,18 +2,15 @@ package my.danielleinad.tolkienmaps.tolkienmaps
 
 typealias TolkienMapId = String
 
-class TolkienMaps constructor(val maps: Map<TolkienMapId, TolkienMap>) {
-    class TolkienMap(
-        val id: TolkienMapId,
-    ) {
-        val positions: MutableList<Position> = mutableListOf()
-    }
+interface TolkienMaps {
+    fun get(mapId: TolkienMapId): TolkienMap?
 
-    class Position(
-        val map: TolkienMap,
-        val scale: Float,
-        val translateX: Float,
-        val translateY: Float,
-        val rotate: Float,
-    )
+    // All properties in this interface are specified relative to the *virtual map*
+    interface TolkienMap {
+        val id: TolkienMapId
+        val scale: Float
+        val translateX: Float
+        val translateY: Float
+        val rotate: Float
+    }
 }
