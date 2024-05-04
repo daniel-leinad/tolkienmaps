@@ -18,5 +18,7 @@ object CachedResourceBitmapProvider {
 }
 
 private fun provideBitmap(resources: Resources, resourceId: Int): Bitmap {
-    return BitmapFactory.decodeResource(resources, resourceId)
+    val options = BitmapFactory.Options()
+//    options.inScaled = false
+    return BitmapFactory.decodeResource(resources, resourceId, options)
 }

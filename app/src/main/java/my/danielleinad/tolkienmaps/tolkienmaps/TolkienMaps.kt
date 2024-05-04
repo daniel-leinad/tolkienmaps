@@ -8,9 +8,9 @@ interface TolkienMaps {
     // All properties in this interface are specified relative to the *virtual map*
     interface TolkienMap {
         val id: TolkienMapId
-        val scale: Float
         val translateX: Float
         val translateY: Float
+        val targetHeight: Float
         val rotate: Float
     }
 }

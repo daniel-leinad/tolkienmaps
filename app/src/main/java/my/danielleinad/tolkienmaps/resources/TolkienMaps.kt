@@ -17,7 +17,7 @@ fun parseTolkienMaps(resources: Resources): TolkienMaps {
             id = xmlMap.id,
             translateX = xmlMap.translateX,
             translateY = xmlMap.translateY,
-            scale = xmlMap.scale,
+            targetHeight = xmlMap.targetHeight,
             rotate = xmlMap.rotate,
         )
         maps[xmlMap.id] = map
@@ -34,7 +34,7 @@ private class TolkienMapsFromResources(val tolkienMaps: Map<TolkienMapId, Tolkie
         override val id: TolkienMapId,
         override val translateX: Float,
         override val translateY: Float,
-        override val scale: Float,
+        override val targetHeight: Float,
         override val rotate: Float
     ) : TolkienMaps.TolkienMap
 }
@@ -44,7 +44,7 @@ private class TolkienMapsXml(xmlParser: XmlResourceParser) {
         val id: String,
         val translateX: Float,
         val translateY: Float,
-        val scale: Float,
+        val targetHeight: Float,
         val rotate: Float,
     ) {
 
@@ -53,22 +53,22 @@ private class TolkienMapsXml(xmlParser: XmlResourceParser) {
                 var id: String? = null
                 var translateX: Float? = null
                 var translateY: Float? = null
-                var scale: Float? = null
+                var targetHeight: Float? = null
                 var rotate = 0F // default value
                 for (i in 0 until xmlParser.attributeCount) {
                     when (xmlParser.getAttributeName(i)) {
                         "id" -> { id = xmlParser.getAttributeValue(i) }
                         "translate_x" -> { translateX = xmlParser.getAttributeIntValue(i, 0).toFloat() }
                         "translate_y" -> { translateY = xmlParser.getAttributeIntValue(i, 0).toFloat() }
-                        "scale" -> { scale = xmlParser.getAttributeFloatValue(i, 0F)}
+                        "target-height" -> { targetHeight = xmlParser.getAttributeIntValue(i, 0).toFloat()}
                         "rotate" -> { rotate = xmlParser.getAttributeIntValue(i, 0).toFloat() }
                     }
                 }
-                if (id == null || scale == null || translateX == null || translateY == null) {
+                if (id == null || targetHeight == null || translateX == null || translateY == null) {
                     throw XmlPullParserException("Error while parsing <map>: required attributes not found")
                 }
 
-                val map = Map(id, translateX, translateY, scale, rotate)
+                val map = Map(id, translateX, translateY, targetHeight, rotate)
 
                 while (true) {
                     xmlParser.next()
