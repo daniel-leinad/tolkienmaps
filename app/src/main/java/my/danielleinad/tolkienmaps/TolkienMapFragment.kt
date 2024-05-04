@@ -214,7 +214,13 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         @SuppressLint("SyntheticAccessor")
         fun render(tolkienMapFragment: TolkienMapFragment) {
             viewModelScope.launch(Dispatchers.Default) {
-                tolkienMapFragment.renderTolkienMaps()
+                try {
+                    tolkienMapFragment.renderTolkienMaps()
+                } catch (_: java.lang.IllegalStateException) {
+                    // TODO find a better way to handle it
+
+                    // User clicked "back" button, do nothing
+                }
             }
         }
     }
