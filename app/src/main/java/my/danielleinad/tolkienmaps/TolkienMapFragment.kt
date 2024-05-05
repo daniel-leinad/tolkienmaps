@@ -24,7 +24,7 @@ import my.danielleinad.tolkienmaps.resources.CachedXmlResourceParser
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
 import my.danielleinad.tolkienmaps.ui.TolkienMapsUIDetails
 import my.danielleinad.layeredscalableview.LayeredScalableView.LayerDescription
-import my.danielleinad.tolkienmaps.resources.CachedResourceBitmapProvider
+import my.danielleinad.tolkienmaps.resources.CachedBitmapProvider
 import kotlin.math.absoluteValue
 
 open class TolkienMapFragment(private val mapId: String) : Fragment() {
@@ -110,7 +110,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         val mainMapRepresentation = tolkienMapsUIStructure.getRepresentation(mapId)
             ?: throw Exception("Representation not found for map $mapId")
 
-        val mainMapOriginalBitmap = CachedResourceBitmapProvider.get(resources, mainMapRepresentation.original)
+        val mainMapOriginalBitmap = CachedBitmapProvider.get(resources, mainMapRepresentation.original)
         val mainMapScale = thisTolkienMap.targetHeight / mainMapOriginalBitmap.height
         val mainLayerMatrix = Matrix()
         mainLayerMatrix.postRotate(thisTolkienMap.rotate)
@@ -120,8 +120,8 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         mainLayer = binding.imageView.LayerDescription(
             OptimizedBitmapLayerView(
                 mainMapOriginalBitmap,
-                CachedResourceBitmapProvider.get(resources, mainMapRepresentation.lowerRes),
-                CachedResourceBitmapProvider.get(resources, mainMapRepresentation.lowestRes),
+                CachedBitmapProvider.get(resources, mainMapRepresentation.lowerRes),
+                CachedBitmapProvider.get(resources, mainMapRepresentation.lowestRes),
             ),
             mainLayerMatrix
         )
@@ -144,9 +144,9 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
             val overlaidTolkienMapRepresentation = tolkienMapsUIDetails.getRepresentation(overlaidTolkienMapId)
                 ?: throw Exception("Representation not found for $overlaidTolkienMapId")
 
-            val originalBitmap = CachedResourceBitmapProvider.get(resources, overlaidTolkienMapRepresentation.original)
-            val lowerResBitmap = CachedResourceBitmapProvider.get(resources, overlaidTolkienMapRepresentation.lowerRes)
-            val lowestResBitmap = CachedResourceBitmapProvider.get(resources, overlaidTolkienMapRepresentation.lowestRes)
+            val originalBitmap = CachedBitmapProvider.get(resources, overlaidTolkienMapRepresentation.original)
+            val lowerResBitmap = CachedBitmapProvider.get(resources, overlaidTolkienMapRepresentation.lowerRes)
+            val lowestResBitmap = CachedBitmapProvider.get(resources, overlaidTolkienMapRepresentation.lowestRes)
 
             val overlaidTolkienMapScale = overlaidTolkienMap.targetHeight / originalBitmap.height
             val matrix = Matrix()
