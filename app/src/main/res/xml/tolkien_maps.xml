@@ -2,7 +2,7 @@
 <root>
     <map id="middle_earth" translate_x="0" translate_y="0" target-height="4411"/>
     <map id="wilderland" translate_x="1790" translate_y="665" target-height="797"/>
-    <map id="rohan_gondor_mordor" translate_x="1950" translate_y="2100" target-height="833"/>
+    <map id="rohan_gondor_mordor" translate_x="1925" translate_y="2125" target-height="833"/>
     <map id="shire" translate_x="900" translate_y="1160" target-height="134" rotate="-5"/>
     <map id="thror" translate_x="2678" translate_y="877" target-height="47" rotate="90"/>
     <map id="beleriand" translate_x="-1150" translate_y="635" target-height="1371"/>
