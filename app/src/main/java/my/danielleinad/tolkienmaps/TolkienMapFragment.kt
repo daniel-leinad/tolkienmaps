@@ -1,6 +1,5 @@
 package my.danielleinad.tolkienmaps
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
@@ -24,7 +23,7 @@ import my.danielleinad.tolkienmaps.resources.CachedXmlResourceParser
 import my.danielleinad.tolkienmaps.tolkienmaps.TolkienMaps
 import my.danielleinad.tolkienmaps.ui.TolkienMapsUIDetails
 import my.danielleinad.layeredscalableview.LayeredScalableView.LayerDescription
-import my.danielleinad.tolkienmaps.resources.CachedBitmapProvider
+import my.danielleinad.tolkienmaps.resources.CachedUnscaledBitmapProvider
 import kotlin.math.absoluteValue
 
 open class TolkienMapFragment(private val mapId: String) : Fragment() {
@@ -110,7 +109,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         val mainMapRepresentation = tolkienMapsUIStructure.getRepresentation(mapId)
             ?: throw Exception("Representation not found for map $mapId")
 
-        val mainMapOriginalBitmap = CachedBitmapProvider.get(resources, mainMapRepresentation.original)
+        val mainMapOriginalBitmap = CachedUnscaledBitmapProvider.get(resources, mainMapRepresentation.original)
         val mainMapScale = thisTolkienMap.targetHeight / mainMapOriginalBitmap.height
         val mainLayerMatrix = Matrix()
         mainLayerMatrix.postRotate(thisTolkienMap.rotate)
@@ -118,10 +117,10 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
         mainLayerMatrix.postTranslate(thisTolkienMap.translateX, thisTolkienMap.translateY)
 
         mainLayer = binding.imageView.LayerDescription(
-            OptimizedBitmapLayerView(
+            SubsamplingBitmapLayerView(
                 mainMapOriginalBitmap,
-                CachedBitmapProvider.get(resources, mainMapRepresentation.lowerRes),
-                CachedBitmapProvider.get(resources, mainMapRepresentation.lowestRes),
+                CachedUnscaledBitmapProvider.get(resources, mainMapRepresentation.lowerRes),
+                CachedUnscaledBitmapProvider.get(resources, mainMapRepresentation.lowestRes),
             ),
             mainLayerMatrix
         )
@@ -144,9 +143,9 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
             val overlaidTolkienMapRepresentation = tolkienMapsUIDetails.getRepresentation(overlaidTolkienMapId)
                 ?: throw Exception("Representation not found for $overlaidTolkienMapId")
 
-            val originalBitmap = CachedBitmapProvider.get(resources, overlaidTolkienMapRepresentation.original)
-            val lowerResBitmap = CachedBitmapProvider.get(resources, overlaidTolkienMapRepresentation.lowerRes)
-            val lowestResBitmap = CachedBitmapProvider.get(resources, overlaidTolkienMapRepresentation.lowestRes)
+            val originalBitmap = CachedUnscaledBitmapProvider.get(resources, overlaidTolkienMapRepresentation.original)
+            val lowerResBitmap = CachedUnscaledBitmapProvider.get(resources, overlaidTolkienMapRepresentation.lowerRes)
+            val lowestResBitmap = CachedUnscaledBitmapProvider.get(resources, overlaidTolkienMapRepresentation.lowestRes)
 
             val overlaidTolkienMapScale = overlaidTolkienMap.targetHeight / originalBitmap.height
             val matrix = Matrix()
@@ -155,7 +154,7 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
             matrix.postTranslate(overlaidTolkienMap.translateX, overlaidTolkienMap.translateY)
 
             val mapLayer = imageView.LayerDescription(
-                OptimizedBitmapLayerView(
+                SubsamplingBitmapLayerView(
                     originalBitmap,
                     lowerResBitmap,
                     lowestResBitmap,
@@ -214,7 +213,6 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     }
 
     object AsyncRenderer : ViewModel() {
-        @SuppressLint("SyntheticAccessor")
         fun render(tolkienMapFragment: TolkienMapFragment) {
             viewModelScope.launch(Dispatchers.Default) {
                 try {
@@ -229,7 +227,11 @@ open class TolkienMapFragment(private val mapId: String) : Fragment() {
     }
 }
 
-class OptimizedBitmapLayerView(private val original: Bitmap, private val lowerRes: Bitmap, private val lowestRes: Bitmap) : LayerView {
+class SubsamplingBitmapLayerView(
+    private val original: Bitmap,
+    private val lowerRes: Bitmap,
+    private val lowestRes: Bitmap,
+    ) : LayerView {
     override fun drawItself(canvas: Canvas, matrix: Matrix, context: LayeredScalableView.Context) {
         val f = FloatArray(9)
         matrix.getValues(f)
@@ -238,10 +240,10 @@ class OptimizedBitmapLayerView(private val original: Bitmap, private val lowerRe
         val finalScale = scaleX + skewX.absoluteValue // TODO this is absolutely mathematically wrong
 
         val correctingFactor = if (context.isMoving) {
+            // Use lower resolution when user moves/scales the map
             0.5
         } else {
-            // TODO why do we need this factor in this case
-            1.5
+            1.0
         }
         val resultingWidth = original.width * finalScale * correctingFactor
 

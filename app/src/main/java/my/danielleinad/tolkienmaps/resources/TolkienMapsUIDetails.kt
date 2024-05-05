@@ -19,7 +19,11 @@ fun parseTolkienMapsUIDetails(resources: Resources): TolkienMapsUIDetails {
     for (xmlMap in tolkienMapsUIStructureXml.maps) {
         val mapId = xmlMap.id
 
-        representations[mapId] = TolkienMapUIRepresentation(xmlMap.bitmap, xmlMap.lowerRes, xmlMap.lowestRes)
+        representations[mapId] = TolkienMapUIRepresentation(
+            xmlMap.bitmap,
+            xmlMap.lowerRes,
+            xmlMap.lowestRes
+        )
         compasses[mapId] = xmlMap.compass
 
         val currentMapNavigations: MutableMap<TolkienMapId, Int> = mutableMapOf()
