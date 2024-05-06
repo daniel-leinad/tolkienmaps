@@ -57,4 +57,9 @@ afterEvaluate {
         //TODO consider rewriting it using mustRunAfter
         dependsOn("checkTolkienMapsResourceConsistency")
     }
+
+    project.tasks.named("mergeReleaseResources") {
+        //TODO consider rewriting it using mustRunAfter
+        dependsOn("checkTolkienMapsResourceConsistency")
+    }
 }

@@ -64,4 +64,7 @@ afterEvaluate {
     project.tasks.named("mergeDebugResources") {
         dependsOn("generateMaps")
     }
+    project.tasks.named("mergeReleaseResources") {
+        dependsOn("generateMaps")
+    }
 }
